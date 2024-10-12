@@ -1,0 +1,58 @@
+name: Release
+
+# on:
+#   push:
+#     tags:
+#     - '*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        targets:
+          - os: ios
+            arch: arm64
+            host: macos-latest
+          - os: mac
+            arch: arm64
+            host: macos-latest
+          - os: mac
+            arch: x64
+            host: macos-latest
+          - os: win
+            arch: arm64
+            host: windows-latest
+          - os: win
+            arch: x64
+            host: windows-latest
+          - os: linux
+            arch: arm64
+            host: ubuntu-latest
+            tool: gnu
+          - os: linux
+            arch: x64
+            host: ubuntu-latest
+            tool: gnu
+          - os: linux
+            arch: arm64
+            host: ubuntu-latest
+            tool: musl
+          - os: linux
+            arch: x64
+            host: ubuntu-latest
+            tool: musl
+
+    name: Build ${{ matrix.targets.os }}-${{ matrix.targets.arch }}
+    runs-on: ${{ matrix.targets.host }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Test
+        run: echo ${{ matrix.targets.os }}-${{ matrix.targets.arch }}
