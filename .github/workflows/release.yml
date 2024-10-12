@@ -62,4 +62,4 @@ jobs:
           TARGET_CPU=${{ matrix.targets.arch }}
           END
 
-          just build
+          just fetch build
