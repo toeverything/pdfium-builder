@@ -1,13 +1,13 @@
+set dotenv-loade
 
 build:
-  echo 'build'
+  @echo "$TARGET_OS $TARGET_CPU"
 
 patch:
   echo 'path'
 
 test:
   echo 'test'
-
 
 
 # https://doc.rust-lang.org/nightly/rustc/platform-support.html

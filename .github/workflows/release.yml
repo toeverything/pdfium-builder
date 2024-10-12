@@ -58,5 +58,11 @@ jobs:
       - name: Install Just
         uses: extractions/setup-just@v1
 
-      - name: Test
-        run: echo ${{ matrix.targets.os }}-${{ matrix.targets.arch }}
+      - name: Set Env
+        run: |
+          cat >> .env <<END
+          TARGET_OS=${{ matrix.targets.os }}
+          TARGET_CPU=${{ matrix.targets.arch }}
+          END
+
+          just build
