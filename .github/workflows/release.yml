@@ -52,8 +52,11 @@ jobs:
     runs-on: ${{ matrix.targets.host }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Just
+        uses: extractions/setup-just@v1
 
       - name: Test
         run: echo ${{ matrix.targets.os }}-${{ matrix.targets.arch }}
