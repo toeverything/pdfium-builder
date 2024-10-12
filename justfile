@@ -1,6 +1,15 @@
 set dotenv-load
 
-fetch:
+PATH_FILE := x'${GITHUB_PATH:-.path}'
+DEPOT_TOOLS_PATH := "${PWD}/depot_tools"
+depot_tools_url := "https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+
+clone_depot_tools:
+  [ -d "depot_tools" ] || git clone {{depot_tools_url}} depot_tools
+  echo "$PWD/depot_tools" >> {{PATH_FILE}}
+  cat DEPOT_TOOLS_PATH
+
+fetch: clone_depot_tools
   
 build:
   @echo "$TARGET_OS $TARGET_CPU"
