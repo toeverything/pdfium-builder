@@ -56,10 +56,16 @@ jobs:
       - uses: extractions/setup-just@v2
 
       - name: Set Env
+        shell: bash
         run: |
           cat >> .env <<END
           TARGET_OS=${{ matrix.targets.os }}
           TARGET_CPU=${{ matrix.targets.arch }}
           END
 
-          just fetch build
+          echo "${PWD}/depot_tools" >> $GITHUB_PATH
+
+      - name: Fetch Modules
+        run: |
+          just fetch
+          just build

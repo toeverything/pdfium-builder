@@ -1,14 +1,7 @@
 set dotenv-load
 
-PATH_FILE := x'${GITHUB_PATH:-.path}'
-DEPOT_TOOLS_PATH := "${PWD}/depot_tools"
-depot_tools_url := "https://chromium.googlesource.com/chromium/tools/depot_tools.git"
-
-clone_depot_tools:
-  [ -d "depot_tools" ] || git clone {{depot_tools_url}} depot_tools
-  echo "$PWD/depot_tools" >> {{PATH_FILE}}
-
-fetch: clone_depot_tools
+fetch:
+  git submodule init && git submodule update --recursive
   
 build:
   @echo "$TARGET_OS $TARGET_CPU"
