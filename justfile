@@ -1,4 +1,4 @@
-set dotenv-loade
+set dotenv-load
 
 build:
   @echo "$TARGET_OS $TARGET_CPU"
