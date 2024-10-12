@@ -48,7 +48,7 @@ jobs:
             host: ubuntu-latest
             tool: musl
 
-    name: Build ${{ matrix.targets.os }}-${{ matrix.targets.arch }}
+    name: Build ${{ matrix.targets.os }}-${{ matrix.targets.arch }} ${{ matrix.targets.tool }}
     runs-on: ${{ matrix.targets.host }}
 
     steps:
