@@ -50,8 +50,11 @@ build: clone_depot_tools
   pushd {{pdfium_dir}}
     case {{target}} in
     ios)
-        [ -f ../patches/ios.git.patch ] && git apply -v ../patches/ios.git.patch
+        [ -f ../patches/ios.build.patch ] && git apply -v ../patches/ios.build.patch
         [ -f ../patches/ios.file.patch ] && patch build/config/ios/rules.gni ../patches/ios.file.patch
+        ;;
+    win)
+        [ -f ../patches/win.build.patch ] && git apply -v ../patches/win.build.patch
         ;;
     esac
     
