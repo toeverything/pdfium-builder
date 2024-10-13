@@ -23,7 +23,6 @@ build: clone_depot_tools
 
   export PATH="$PATH:$PWD/depot_tools"
 
-  export DEPOT_TOOLS_UPDATE=0
   export DEPOT_TOOLS_WIN_TOOLCHAIN=0
 
   just clone_pdfium
