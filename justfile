@@ -70,7 +70,7 @@ pack:
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   
-  cd {{pdfium}} && git apply -v {{patches}}/headers.patch
+  cd {{pdfium}} && git apply -v ../patches/headers.patch
   
   cp -r {{pdfium}}/public {{dist}}/include
   rm -f {{dist}}/include/DEPS
