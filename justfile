@@ -5,8 +5,7 @@ pdfium_repo := "https://pdfium.googlesource.com/pdfium.git"
 pdfium_branch := env_var_or_default('PDFIUM_BRANCH', "chromium/6694")
 
 pdfium_dir := "pdfium"
-target_env := if env_var("is_debug") == "false" { "release" } else { "debug" }
-target := "$target_os-$target_cpu-" + target_env
+target := "$target_os"
 
 clone_depot_tools:
   [ -d "depot_tools" ] || git clone {{depot_tools_repo}}
