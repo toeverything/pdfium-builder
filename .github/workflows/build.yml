@@ -68,10 +68,60 @@ jobs:
           [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_cpu }}"
           [ "${{ inputs.is_debug }}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
           echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
+
       - name: Checkout this repo
         uses: actions/checkout@v4
-      - name: Install Tools
+
+      - name: Install Linux dependencies
+        if: ${{ inputs.target_os == 'linux' }}
+        run: |
+          PKGS=""
+
+          if [ "${{ inputs.target_environment }}" == "musl" ]; then
+            case "${{ inputs.target_cpu }}" in
+            x86)
+              PKGS="g++ g++-multilib"
+              ;;
+
+            x64)
+              PKGS="g++"
+              ;;
+
+            arm)
+              PKGS="g++"
+              ;;
+
+            arm64)
+              PKGS="g++"
+              ;;
+            esac
+          else
+            case "${{ inputs.target_cpu }}" in
+            arm)
+              PKGS="libc6-i386 gcc-multilib g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf"
+              ;;
+
+            arm64)
+              PKGS="libc6-i386 gcc-multilib g++-aarch64-linux-gnu gcc-aarch64-linux-gnu"
+              ;;
+
+            x86)
+              PKGS="g++-multilib"
+              ;;
+
+            x64)
+              PKGS="g++"
+              ;;
+            esac
+          fi
+
+          apt-get update
+          apt-get install -y cmake pkg-config
+          apt-get install -y $PKGS
+
+      - name: Install Just
         uses: extractions/setup-just@v2
+
       - name: Set environment variables
         shell: bash
         run: |
