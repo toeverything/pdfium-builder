@@ -77,48 +77,48 @@ jobs:
         run: |
           PKGS=""
 
-          if [ "${{ inputs.target_environment }}" == "musl" ]; then
-            case "${{ inputs.target_cpu }}" in
-            x86)
-              PKGS="g++-12 g++-12-multilib"
-              ;;
+          # if [ "${{ inputs.target_environment }}" == "musl" ]; then
+          #   case "${{ inputs.target_cpu }}" in
+          #   x86)
+          #     PKGS="g++-12 g++-12-multilib"
+          #     ;;
 
-            x64)
-              PKGS="g++-12"
-              ;;
+          #   x64)
+          #     PKGS="g++-12"
+          #     ;;
 
-            arm)
-              PKGS="g++-12"
-              ;;
+          #   arm)
+          #     PKGS="g++-12"
+          #     ;;
 
-            arm64)
-              PKGS="g++-12"
-              ;;
-            esac
-          else
-            case "${{ inputs.target_cpu }}" in
-            arm)
-              PKGS="libc6-i386 gcc-12-multilib g++-12-arm-linux-gnueabihf gcc-12-arm-linux-gnueabihf"
-              ;;
+          #   arm64)
+          #     PKGS="g++-12"
+          #     ;;
+          #   esac
+          # else
+          #   case "${{ inputs.target_cpu }}" in
+          #   arm)
+          #     PKGS="libc6-i386 gcc-12-multilib g++-12-arm-linux-gnueabihf gcc-12-arm-linux-gnueabihf"
+          #     ;;
 
-            arm64)
-              PKGS="libc6-i386 gcc-12-multilib g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu"
-              ;;
+          #   arm64)
+          #     PKGS="libc6-i386 gcc-12-multilib g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu"
+          #     ;;
 
-            x86)
-              PKGS="g++-12-multilib"
-              ;;
+          #   x86)
+          #     PKGS="g++-12-multilib"
+          #     ;;
 
-            x64)
-              PKGS="g++-12"
-              ;;
-            esac
-          fi
+          #   x64)
+          #     PKGS="g++-12"
+          #     ;;
+          #   esac
+          # fi
 
           sudo apt-get update
           sudo apt-get install -y cmake pkg-config $PKGS
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
+          # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
+          # sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
 
       - name: Install Just
         uses: extractions/setup-just@v2
