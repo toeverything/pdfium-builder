@@ -65,7 +65,7 @@ on:
 
 jobs:
   build:
-    name: Build - ${{ github.event.inputs.target_os }} ${{ github.event.inputs.target_cpu }}
+    name: Build - ${{ github.event.inputs.target_os }} ${{ github.event.inputs.target_cpu }} ${{ github.event.inputs.target_environment }}
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.event.inputs.branch }}
