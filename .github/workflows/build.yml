@@ -81,7 +81,7 @@ jobs:
           is_debug = ${{ inputs.is_debug }}
           pdf_is_complete_lib = ${{ inputs.staticlib }}
           END
-          [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = '${{ inputs.target_environment }}'" >> .env
+          [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = \"${{ inputs.target_environment }}\"" >> .env
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
       - name: Build
         shell: bash
