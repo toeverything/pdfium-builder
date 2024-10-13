@@ -102,7 +102,7 @@ jobs:
               ;;
 
             arm64)
-              PKGS="libc6-i386 gcc-multilib g++-aarch64-linux-gnu gcc-aarch64-linux-gnu"
+              PKGS="libc6-i386 gcc-11-multilib g++-11-aarch64-linux-gnu gcc-11-aarch64-linux-gnu"
               ;;
 
             x86)
