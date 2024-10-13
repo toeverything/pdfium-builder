@@ -39,3 +39,4 @@ index fd9ce6997..34cf9c46a 100644
 +#include "fpdf_deleters.h"
 
  // Versions of FPDF types that clean up the object at scope exit.
+
