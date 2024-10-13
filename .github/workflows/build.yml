@@ -115,9 +115,8 @@ jobs:
             esac
           fi
 
-          apt-get update
-          apt-get install -y cmake pkg-config
-          apt-get install -y $PKGS
+          sudo apt-get update
+          sudo apt-get install -y cmake pkg-config $PKGS
 
       - name: Install Just
         uses: extractions/setup-just@v2
