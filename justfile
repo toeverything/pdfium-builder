@@ -48,13 +48,19 @@ build: clone_depot_tools
   args="$(echo $env | sed 's/ = /=/g' | sort)"
 
   pushd {{pdfium_dir}}
-  [ -f ../patches/$target_os.patch ] && git apply -v ../patches/$target_os.patch
-  gn gen out/{{target}} --args="$args"
-  ninja -C out/{{target}} pdfium -v
+    case {{target}} in
+    ios)
+        just patch_ios
+        ;;
+    esac
+    
+    gn gen out/{{target}} --args="$args"
+    ninja -C out/{{target}} pdfium -v
   popd
 
-
-patch:
+patch_ios:
+    [ -f ../patches/ios.git.patch ] && git apply -v ../patches/ios.git.patch
+    [ -f ../patches/ios.file.patch ] && patch build/config/ios/config.gni ../patches/ios.file.patch
 
 test:
   echo 'test'

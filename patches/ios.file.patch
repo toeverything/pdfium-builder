@@ -1,0 +1,12 @@
+--- build/config/ios/rules.gni	2024-10-14 00:50:02
++++ build/config/ios/rules.gni2	2024-10-14 00:50:40
+@@ -887,9 +887,6 @@
+         if (!defined(data_deps)) {
+           data_deps = []
+         }
+-        if (build_with_chromium) {
+-          data_deps += [ "//testing/iossim" ]
+-        }
+       }
+     }
+   }
