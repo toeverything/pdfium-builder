@@ -4,6 +4,7 @@ depot_tools_repo := "https://chromium.googlesource.com/chromium/tools/depot_tool
 pdfium_repo := "https://pdfium.googlesource.com/pdfium.git"
 pdfium_branch := env_var_or_default('PDFIUM_BRANCH', "chromium/6694")
 
+patches_dir := "$PWD/patches"
 pdfium_dir := "pdfium"
 target := "$target_os"
 
@@ -50,11 +51,11 @@ build: clone_depot_tools
   pushd {{pdfium_dir}}
     case {{target}} in
     ios)
-        [ -f ../patches/ios.build.patch ] && git apply -v ../patches/ios.build.patch
-        [ -f ../patches/ios.file.patch ] && patch build/config/ios/rules.gni ../patches/ios.file.patch
+        [ -f {{patches_dir}}/ios.build.patch ] && git apply -v {{patches_dir}}/patches/ios.build.patch
+        [ -f {{patches_dir}}/ios.rules.patch ] && git -C build {{patches_dir}}/patches/ios.rules.patch
         ;;
     win)
-        [ -f ../patches/win.build.patch ] && git -C build apply -v ../patches/win.build.patch
+        [ -f {{patches_dir}}/win.toolchain.patch ] && git -C build apply -v {{patches_dir}}/win.toolchain.patch
         ;;
     esac
     
