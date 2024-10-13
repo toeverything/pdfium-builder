@@ -5,3 +5,5 @@ pdfium
 .gc*
 
 .local.env
+
+dist

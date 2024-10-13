@@ -68,17 +68,15 @@ test:
   echo 'test'
 
 pack:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   
-  cd {{pdfium}} && git apply -C public {{patches}}/patches/headers.patch
+  cd {{pdfium}} && git -C public apply -v {{patches}}/patches/headers.patch
   
   cp -r {{pdfium}}/public {{dist}}/include
   rm -f {{dist}}/include/DEPS
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
   
-  #cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
+ [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.a" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
+ [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.lib" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.lib {{dist}}/lib
