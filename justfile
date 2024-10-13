@@ -1,10 +1,51 @@
 set dotenv-load
 
-fetch:
-  git submodule init && git submodule update --recursive
-  
-build:
-  @echo "$TARGET_OS $TARGET_CPU"
+depot_tools_repo := "https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+pdfium_repo := "https://pdfium.googlesource.com/pdfium.git"
+pdfium_branch := env_var_or_default('PDFIUM_BRANCH', "chromium/6694")
+
+pdfium_dir := "pdfium"
+target_env := if env_var("is_debug") == "false" { "release" } else { "debug" }
+target := "$target_os-$target_cpu-" + target_env
+
+clone_depot_tools:
+  [ -d "depot_tools" ] || git clone {{depot_tools_repo}}
+
+clone_pdfium:
+  [ -d "pdfium" ] || gclient config --unmanaged {{pdfium_repo}} --custom-var checkout_configuration=minimal
+  [ -f ".gclient" ] && echo "target_os = [ '$target_os' ]" >> .gclient
+
+  gclient sync -r origin/{{pdfium_branch}} --no-history --shallow
+
+build: clone_depot_tools
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  export PATH="$PATH:$PWD/depot_tools"
+
+  just clone_pdfium
+
+  for folder in pdfium \
+    pdfium/build \
+    pdfium/third_party/libjpeg_turbo \
+    pdfium/base/allocator/partition_allocator; do
+    if [ -e "$folder" ]; then
+      git -C $folder reset --hard
+      git -C $folder clean -df
+    fi
+  done
+
+
+  target_dir="out/{{target}}"
+  mkdir -p {{pdfium_dir}}/$target_dir
+
+  args="$(cat .env .$target_os.env .release.env | sed 's/ = /=/g' | sort)"
+
+  pushd {{pdfium_dir}}
+  gn gen "$target_dir" --args="$args"
+  ninja -C "$target_dir" pdfium -v
+  popd
+
 
 patch:
   echo 'path'

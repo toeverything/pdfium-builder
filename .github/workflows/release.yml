@@ -59,8 +59,8 @@ jobs:
         shell: bash
         run: |
           cat >> .env <<END
-          TARGET_OS=${{ matrix.targets.os }}
-          TARGET_CPU=${{ matrix.targets.arch }}
+          target_os = "${{ matrix.targets.os }}"
+          target_cpu = "${{ matrix.targets.arch }}"
           END
 
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
