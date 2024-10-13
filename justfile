@@ -51,7 +51,7 @@ build: clone_depot_tools
     case {{target}} in
     ios)
         [ -f ../patches/ios.git.patch ] && git apply -v ../patches/ios.git.patch
-        [ -f ../patches/ios.file.patch ] && patch build/config/ios/config.gni ../patches/ios.file.patch
+        [ -f ../patches/ios.file.patch ] && patch build/config/ios/rules.gni ../patches/ios.file.patch
         ;;
     esac
     
