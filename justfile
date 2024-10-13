@@ -6,7 +6,7 @@ pdfium_branch := env_var_or_default('PDFIUM_BRANCH', "chromium/6694")
 
 patches_dir := "$PWD/patches"
 pdfium_dir := "pdfium"
-target := "$target_os"
+target := if "$target_os" == "$target_cpu" { "$target_os" } else { "$target_os-$target_cpu" }
 
 clone_depot_tools:
   [ -d "depot_tools" ] || git clone {{depot_tools_repo}}
