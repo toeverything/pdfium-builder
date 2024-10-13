@@ -4,8 +4,9 @@ depot_tools_repo := "https://chromium.googlesource.com/chromium/tools/depot_tool
 pdfium_repo := "https://pdfium.googlesource.com/pdfium.git"
 pdfium_branch := env_var_or_default('PDFIUM_BRANCH', "chromium/6694")
 
-patches_dir := "$PWD/patches"
-pdfium_dir := "pdfium"
+dist := "$PWD/dist"
+patches := "$PWD/patches"
+pdfium := "pdfium"
 target := if "$target_os" == "$target_cpu" { "$target_os" } else { "$target_os-$target_cpu" }
 
 clone_depot_tools:
@@ -36,7 +37,7 @@ build: clone_depot_tools
 
   just clone_pdfium
 
-  mkdir -p {{pdfium_dir}}/out/{{target}}
+  mkdir -p {{pdfium}}/out/{{target}}
 
   env=$(
     cat .env
@@ -47,20 +48,37 @@ build: clone_depot_tools
   )
   args="$(echo $env | sed 's/ = /=/g' | sort)"
 
-  pushd {{pdfium_dir}}
+  pushd {{pdfium}}
     case {{target}} in
     ios)
-        [ -f {{patches_dir}}/ios.build.patch ] && git apply -v {{patches_dir}}/patches/ios.build.patch
-        [ -f {{patches_dir}}/ios.rules.patch ] && git -C build {{patches_dir}}/patches/ios.rules.patch
-        ;;
+      [ -f {{patches}}/ios.build.patch ] && git apply -v {{patches}}/patches/ios.build.patch
+      [ -f {{patches}}/ios.rules.patch ] && git -C build {{patches}}/patches/ios.rules.patch
+      ;;
     win)
-        [ -f {{patches_dir}}/win.toolchain.patch ] && git -C build apply -v {{patches_dir}}/win.toolchain.patch
-        ;;
+      [ -f {{patches}}/win.toolchain.patch ] && git -C build apply -v {{patches}}/win.toolchain.patch
+      ;;
     esac
     
     gn gen out/{{target}} --args="$args"
     ninja -C out/{{target}} pdfium -v
+    ls -la out/{{target}}/obj
   popd
 
 test:
   echo 'test'
+
+pack:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  
+  mkdir -p {{dist}}
+  mkdir -p {{dist}}/lib
+  
+  cd {{pdfium}} && git apply -C public {{patches}}/patches/headers.patch
+  
+  cp -r {{pdfium}}/public {{dist}}/include
+  rm -f {{dist}}/include/DEPS
+  rm -f {{dist}}/include/README
+  rm -f {{dist}}/include/PRESUBMIT.py
+  
+  #cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
