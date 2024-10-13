@@ -54,7 +54,7 @@ build: clone_depot_tools
         [ -f ../patches/ios.file.patch ] && patch build/config/ios/rules.gni ../patches/ios.file.patch
         ;;
     win)
-        [ -f ../patches/win.build.patch ] && git apply -v ../patches/win.build.patch
+        [ -f ../patches/win.build.patch ] && git -C build apply -v ../patches/win.build.patch
         ;;
     esac
     
