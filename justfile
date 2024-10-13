@@ -23,6 +23,9 @@ build: clone_depot_tools
 
   export PATH="$PATH:$PWD/depot_tools"
 
+  export DEPOT_TOOLS_UPDATE=0
+  export DEPOT_TOOLS_WIN_TOOLCHAIN=0
+
   just clone_pdfium
 
   for folder in pdfium \
@@ -36,14 +39,19 @@ build: clone_depot_tools
   done
 
 
-  target_dir="out/{{target}}"
-  mkdir -p {{pdfium_dir}}/$target_dir
+  mkdir -p {{pdfium_dir}}/{{target}}
 
-  args="$(cat .env .$target_os.env .release.env | sed 's/ = /=/g' | sort)"
+  env=$(
+    cat .env
+    [ -f .$target_os.env ] && cat .$target_os.env
+    [ -f .$target_os.$target_cpu.env ] && cat .$target_os.$target_cpu.env
+    cat .release.env
+  )
+  args="$(echo $env | sed 's/ = /=/g' | sort)"
 
   pushd {{pdfium_dir}}
-  gn gen "$target_dir" --args="$args"
-  ninja -C "$target_dir" pdfium -v
+  gn gen {{target}} --args="$args"
+  ninja -C {{target}} pdfium -v
   popd
 
 
