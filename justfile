@@ -22,10 +22,7 @@ build: clone_depot_tools
   set -euo pipefail
 
   export PATH="$PATH:$PWD/depot_tools"
-
   export DEPOT_TOOLS_WIN_TOOLCHAIN=0
-
-  just clone_pdfium
 
   for folder in pdfium \
     pdfium/build \
@@ -37,11 +34,13 @@ build: clone_depot_tools
     fi
   done
 
+  just clone_pdfium
 
   mkdir -p {{pdfium_dir}}/out/{{target}}
 
   env=$(
     cat .env
+    [ -f .local.env ] && cat .local.env
     [ -f .$target_os.env ] && cat .$target_os.env
     [ -f .$target_os.$target_cpu.env ] && cat .$target_os.$target_cpu.env
     cat .release.env
