@@ -102,8 +102,7 @@ jobs:
               ;;
 
             arm64)
-              # PKGS="libc6-i386 gcc-12-multilib g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu"
-              PKGS="gcc-12-multilib"
+              PKGS="libc6-i386 gcc-12-multilib g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu"
               ;;
 
             x86)
@@ -118,8 +117,8 @@ jobs:
 
           sudo apt-get update
           sudo apt-get install -y cmake pkg-config $PKGS
-          # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
-          # sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
 
       - name: Install Just
         uses: extractions/setup-just@v2
