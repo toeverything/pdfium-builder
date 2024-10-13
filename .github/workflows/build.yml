@@ -62,11 +62,11 @@ jobs:
         shell: bash
         run: |
           ARTIFACT="pdfium"
-          [ "${{inputs.enable_v8}}" == "true" ] && ARTIFACT="$ARTIFACT-v8"
-          ARTIFACT="$ARTIFACT-${{inputs.target_os}}"
-          [ "${{inputs.target_environment}}" != "" ] && ARTIFACT="$ARTIFACT-${{inputs.target_environment}}"
-          [ "${{inputs.target_os}}" != "${{inputs.target_cpu}}" ] && ARTIFACT="$ARTIFACT-${{inputs.target_cpu}}"
-          [ "${{inputs.is_debug}}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
+          [ "${{ inputs.enable_v8 }}" == "true" ] && ARTIFACT="$ARTIFACT-v8"
+          ARTIFACT="$ARTIFACT-${{ inputs.target_os }}"
+          [ "${{ inputs.target_environment }}" != "" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_environment }}"
+          [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_cpu }}"
+          [ "${{ inputs.is_debug }}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
           echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
       - name: Checkout this repo
         uses: actions/checkout@v4
@@ -76,10 +76,10 @@ jobs:
         shell: bash
         run: |
           cat >> .env <<END
-          target_os = "${{inputs.target_os}}"
-          target_cpu = "${{inputs.target_cpu}}"
-          is_debug = ${{inputs.is_debug}}
-          pdf_is_complete_lib = ${{inputs.staticlib}}
+          target_os = "${{ inputs.target_os }}"
+          target_cpu = "${{ inputs.target_cpu }}"
+          is_debug = ${{ inputs.is_debug }}
+          pdf_is_complete_lib = ${{ inputs.staticlib }}
           END
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
       - name: Build
@@ -92,7 +92,7 @@ jobs:
           ## args.gn
 
           \`\`\`gn
-          $(cat pdfium/out/${{inputs.target_os}}/args.gn)
+          $(cat pdfium/out/${{ inputs.target_os }}/args.gn)
           \`\`\`
           END
         shell: bash
