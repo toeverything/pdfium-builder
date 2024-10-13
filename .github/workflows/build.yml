@@ -70,6 +70,8 @@ jobs:
           echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
       - name: Checkout this repo
         uses: actions/checkout@v4
+      - name: Install Tools
+        uses: extractions/setup-just@v2
       - name: Set environment variables
         shell: bash
         run: |
