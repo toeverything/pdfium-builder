@@ -51,8 +51,8 @@ build: clone_depot_tools
   pushd {{pdfium}}
     case {{target}} in
     ios)
-      [ -f {{patches}}/ios.build.patch ] && git apply -v {{patches}}/patches/ios.build.patch
-      [ -f {{patches}}/ios.rules.patch ] && git -C build {{patches}}/patches/ios.rules.patch
+      [ -f {{patches}}/ios.build.patch ] && git apply -v {{patches}}/ios.build.patch
+      [ -f {{patches}}/ios.rules.patch ] && git -C build {{patches}}/ios.rules.patch
       ;;
     win)
       [ -f {{patches}}/win.toolchain.patch ] && git -C build apply -v {{patches}}/win.toolchain.patch
@@ -61,7 +61,6 @@ build: clone_depot_tools
     
     gn gen out/{{target}} --args="$args"
     ninja -C out/{{target}} pdfium -v
-    ls -la out/{{target}}/obj
   popd
 
 test:
@@ -71,12 +70,14 @@ pack:
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   
-  cd {{pdfium}} && git -C public apply -v {{patches}}/patches/headers.patch
+  cd {{pdfium}} && git -C public apply -v {{patches}}/headers.patch
   
   cp -r {{pdfium}}/public {{dist}}/include
   rm -f {{dist}}/include/DEPS
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
+  
+  ls -la {{pdfium}}/out/{{target}}/obj
   
   [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.a" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
   [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.lib" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.lib {{dist}}/lib
