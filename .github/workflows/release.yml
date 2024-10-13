@@ -67,5 +67,4 @@ jobs:
 
       - name: Fetch Modules
         run: |
-          just fetch
           just build
