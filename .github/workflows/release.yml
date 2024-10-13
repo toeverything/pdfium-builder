@@ -64,5 +64,6 @@ jobs:
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
 
       - name: Build
+        shell: bash
         run: |
           just build
