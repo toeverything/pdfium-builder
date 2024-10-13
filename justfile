@@ -78,5 +78,5 @@ pack:
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
   
- [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.a" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
- [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.lib" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.lib {{dist}}/lib
+  [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.a" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
+  [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.lib" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.lib {{dist}}/lib
