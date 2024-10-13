@@ -37,7 +37,7 @@ build: clone_depot_tools
   done
 
 
-  mkdir -p {{pdfium_dir}}/{{target}}
+  mkdir -p {{pdfium_dir}}/out/{{target}}
 
   env=$(
     cat .env
@@ -48,8 +48,8 @@ build: clone_depot_tools
   args="$(echo $env | sed 's/ = /=/g' | sort)"
 
   pushd {{pdfium_dir}}
-  gn gen {{target}} --args="$args"
-  ninja -C {{target}} pdfium -v
+  gn gen out/{{target}} --args="$args"
+  ninja -C out/{{target}} pdfium -v
   popd
 
 

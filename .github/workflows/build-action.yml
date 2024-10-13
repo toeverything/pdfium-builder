@@ -14,6 +14,7 @@ on:
       target_os:
         description: Target OS
         type: choice
+        default: mac
         options:
           - android
           - ios
@@ -24,6 +25,7 @@ on:
       target_cpu:
         description: Target CPU
         type: choice
+        default: arm64
         options:
           - arm
           - arm64

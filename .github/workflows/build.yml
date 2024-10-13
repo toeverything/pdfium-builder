@@ -92,7 +92,7 @@ jobs:
           ## args.gn
 
           \`\`\`gn
-          $(cat pdfium/out/args.gn)
+          $(cat pdfium/out/${{inputs.target_os}}/args.gn)
           \`\`\`
           END
         shell: bash
