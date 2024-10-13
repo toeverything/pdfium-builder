@@ -16,6 +16,7 @@ clone_pdfium:
   [ -f ".gclient" ] && echo "target_os = [ '$target_os' ]" >> .gclient
 
   gclient sync -r origin/{{pdfium_branch}} --no-history --shallow
+  ls .
 
 build: clone_depot_tools
   #!/usr/bin/env bash
