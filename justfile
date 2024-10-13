@@ -50,17 +50,14 @@ build: clone_depot_tools
   pushd {{pdfium_dir}}
     case {{target}} in
     ios)
-        just patch_ios
+        [ -f ../patches/ios.git.patch ] && git apply -v ../patches/ios.git.patch
+        [ -f ../patches/ios.file.patch ] && patch build/config/ios/config.gni ../patches/ios.file.patch
         ;;
     esac
     
     gn gen out/{{target}} --args="$args"
     ninja -C out/{{target}} pdfium -v
   popd
-
-patch_ios:
-    [ -f ../patches/ios.git.patch ] && git apply -v ../patches/ios.git.patch
-    [ -f ../patches/ios.file.patch ] && patch build/config/ios/config.gni ../patches/ios.file.patch
 
 test:
   echo 'test'
