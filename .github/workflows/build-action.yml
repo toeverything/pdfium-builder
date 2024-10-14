@@ -75,5 +75,5 @@ jobs:
       target_environment: ${{ github.event.inputs.target_environment }}
       enable_v8: ${{ github.event.inputs.enable_v8 == 'true' }}
       emsdk_version: ${{ github.event.inputs.emsdk_version }}
-      staticlib: ${{ github.event.inputs.staticlib == 'true' }}
+      static_lib: ${{ github.event.inputs.static_lib == 'true' }}
       debug: ${{ github.event.inputs.debug == 'true' }}
