@@ -79,5 +79,4 @@ pack:
   
   ls -la {{pdfium}}/out/{{target}}/obj
   
-  [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.a" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
-  [ -f "{{pdfium}}/out/{{target}}/obj/libpdfium.lib" ] && cp {{pdfium}}/out/{{target}}/obj/libpdfium.lib {{dist}}/lib
+  cp {{pdfium}}/out/{{target}}/obj/libpdfium.* {{dist}}/lib
