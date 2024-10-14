@@ -10,4 +10,4 @@ index c2d8d3a..32c00ce 100644
 +      command = "rc.exe /nologo $sys_include_flags{{defines}} {{include_dirs}} /fo{{output}} /dENV=$env {{source}}"
        depsformat = "msvc"
        outputs = [ "$object_subdir/{{source_name_part}}.res" ]
-       description = "RC {{output}}
+       description = "RC {{output}}"

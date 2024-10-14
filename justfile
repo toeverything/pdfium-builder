@@ -47,15 +47,16 @@ build: clone_depot_tools
     cat .release.env
   )
   args="$(echo $env | sed 's/ = /=/g' | sort)"
+  patches_dir="{{patches}}"
 
   pushd {{pdfium}}
-    case {{target}} in
+    case "$target_os" in
     ios)
-      [ -f {{patches}}/ios.build.patch ] && git apply -v {{patches}}/ios.build.patch
-      [ -f {{patches}}/ios.rules.patch ] && git -C build {{patches}}/ios.rules.patch
+      git apply -v $patches_dir/ios.build.patch
+      git -C build apply -v $patches_dir/ios.config.patch
       ;;
     win)
-      [ -f {{patches}}/win.toolchain.patch ] && git -C build apply -v {{patches}}/win.toolchain.patch
+      git -C build apply -v $patches_dir/win.toolchain.patch
       ;;
     esac
     
@@ -67,16 +68,29 @@ test:
   echo 'test'
 
 pack:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  
+  patches_dir="{{patches}}"
+
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
+  mkdir -p {{dist}}/include
   
-  cd {{pdfium}} && git apply -v ../patches/headers.patch
+  pushd {{pdfium}}
+    git apply -v $patches_dir/headers.patch
+  popd
   
-  cp -r {{pdfium}}/public {{dist}}/include
+  cp -r {{pdfium}}/public/* {{dist}}/include/
   rm -f {{dist}}/include/DEPS
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
   
-  ls -la {{pdfium}}/out/{{target}}/obj
-  
-  cp {{pdfium}}/out/{{target}}/obj/libpdfium.* {{dist}}/lib
+  case "$target_os" in
+  win)
+    cp {{pdfium}}/out/{{target}}/obj/pdfium.lib {{dist}}/lib
+    ;;
+  *)
+    cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
+    ;;
+  esac

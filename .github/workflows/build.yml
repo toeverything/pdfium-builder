@@ -32,7 +32,7 @@ on:
         required: false
         default: true
       is_debug:
-        description: Is debug
+        description: Debug
         type: boolean
         required: false
         default: false
