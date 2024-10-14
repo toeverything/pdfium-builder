@@ -144,7 +144,7 @@ jobs:
           [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && target="$target-${{ inputs.target_cpu }}"
 
           cat <<END >>$GITHUB_STEP_SUMMARY
-          ## args.gn
+          ## ${target} args.gn
 
           \`\`\`gn
           $(cat pdfium/out/$target/args.gn)
