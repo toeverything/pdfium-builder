@@ -4,6 +4,5 @@ pdfium
 .cipd
 .gc*
 
-.local.env
-
+.env
 dist

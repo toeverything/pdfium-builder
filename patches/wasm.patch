@@ -1,0 +1,38 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index c96235026..f8d87fc21 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -600,6 +600,6 @@ group("gn_check") {
+   # TODO(crbug.com/pdfium/1832): Remove !is_android when //third_party/expat is
+   # available.
+   if (defined(checkout_skia) && checkout_skia && !is_android) {
+-    deps += [ "//skia" ]
++    #deps += [ "//skia" ]
+   }
+ }
+diff --git a/core/fxcrt/BUILD.gn b/core/fxcrt/BUILD.gn
+index 6479f8d61..ce2c4d53f 100644
+--- a/core/fxcrt/BUILD.gn
++++ b/core/fxcrt/BUILD.gn
+@@ -157,7 +157,7 @@ source_set("fxcrt") {
+   } else {
+     sources += [ "fx_memory_malloc.cpp" ]
+   }
+-  if (is_posix) {
++  if (is_posix || is_wasm) {
+     sources += [
+       "cfx_fileaccess_posix.cpp",
+       "cfx_fileaccess_posix.h",
+diff --git a/core/fxge/BUILD.gn b/core/fxge/BUILD.gn
+index a07bcd089..21b063664 100644
+--- a/core/fxge/BUILD.gn
++++ b/core/fxge/BUILD.gn
+@@ -160,7 +160,7 @@ source_set("fxge") {
+     ]
+   }
+ 
+-  if (is_linux || is_chromeos) {
++  if (is_linux || is_chromeos || is_wasm) {
+     sources += [ "linux/fx_linux_impl.cpp" ]
+   }
+ 

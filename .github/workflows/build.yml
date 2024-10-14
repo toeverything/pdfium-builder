@@ -3,16 +3,16 @@ name: Build
 on:
   workflow_call:
     inputs:
-      branch:
-        description: PDFium branch
-        type: string
-        required: false
-        default: main
+      # branch:
+      #   description: PDFium branch
+      #   type: string
+      #   required: false
+      #   default: main
       version:
         description: PDFium version
         type: string
         required: false
-        default: ""
+        default: "6694"
       target_os:
         description: Target OS (android|ios|linux|mac|wasm|win)
         type: string
@@ -26,12 +26,12 @@ on:
         type: string
         required: false
         default: ""
-      staticlib:
+      static_lib:
         description: Static Library
         type: boolean
         required: false
         default: true
-      is_debug:
+      debug:
         description: Debug
         type: boolean
         required: false
@@ -66,7 +66,7 @@ jobs:
           ARTIFACT="$ARTIFACT-${{ inputs.target_os }}"
           [ "${{ inputs.target_environment }}" != "" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_environment }}"
           [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_cpu }}"
-          [ "${{ inputs.is_debug }}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
+          [ "${{ inputs.debug }}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
           echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
 
       - name: Checkout this repo
@@ -126,12 +126,14 @@ jobs:
       - name: Set environment variables
         shell: bash
         run: |
-          cat >> .env <<END
-          target_os = "${{ inputs.target_os }}"
-          target_cpu = "${{ inputs.target_cpu }}"
-          is_debug = ${{ inputs.is_debug }}
-          pdf_is_complete_lib = ${{ inputs.staticlib }}
+          cat >> $GITHUB_ENV <<END
+          PDFIUM_VERSION=${{ inputs.version }}
+          TARGET_OS = "${{ inputs.target_os }}"
+          TARGET_CPU = "${{ inputs.target_cpu }}"
+          STATIC_LIB = ${{ inputs.static_lib }}
+          DEBUG = ${{ inputs.debug }}
           END
+
           [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = \"${{ inputs.target_environment }}\"" >> .env
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
       - name: Build
@@ -143,8 +145,8 @@ jobs:
           target="${{ inputs.target_os }}"
           [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && target="$target-${{ inputs.target_cpu }}"
 
-          cat <<END >>$GITHUB_STEP_SUMMARY
-          ## ${target} args.gn
+          cat <<END >> $GITHUB_STEP_SUMMARY
+          ## ${target}'s args.gn
 
           \`\`\`gn
           $(cat pdfium/out/$target/args.gn)
