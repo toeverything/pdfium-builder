@@ -55,7 +55,7 @@ build: clone_depot_tools
     git -C {{pdfium}}/build apply -v {{patches}}/ios.config.patch
     ;;
   win)
-    git -C {{pdfium}}/build apply --reject --whitespace=fix -v {{patches}}/win.toolchain.patch
+    #git -C {{pdfium}}/build apply --reject --whitespace=fix -v {{patches}}/win.toolchain.patch
     ;;
   esac
 
@@ -75,7 +75,7 @@ pack:
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
   
-  git -C {{pdfium}} apply --reject --whitespace=fix -v {{patches}}/headers.patch
+  #git -C {{pdfium}} apply --reject --whitespace=fix -v {{patches}}/headers.patch
   
   cp -r {{pdfium}}/public/* {{dist}}/include/
   rm -f {{dist}}/include/DEPS
