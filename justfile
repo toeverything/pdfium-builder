@@ -52,9 +52,11 @@ build: clone_depot_tools
     echo 'target_cpu = "{{target_cpu}}"'
     echo 'pdf_is_complete_lib = {{static_lib}}'
     echo 'is_debug = {{debug}}'
-    echo 'pdf_enable_v8 = false = {{enable_v8}}'
+    echo 'pdf_enable_v8 = {{enable_v8}}'
     cat {{args}}/common.gn
-    [ "{{debug}}" == "false" ] && cat {{args}}/release.gn
+    if [ "{{debug}}" == "false" ]; then
+      cat {{args}}/release.gn
+    fi
     if [ -f {{args}}/$TARGET_OS.gn ]; then
       cat {{args}}/$TARGET_OS.gn
     fi
@@ -64,6 +66,8 @@ build: clone_depot_tools
   )
   args="$(echo $env | sed 's/ = /=/g' | sort)"
   
+  [ "{{static_lib}}" == "false" ] && patch -d {{pdfium}} -p1 < {{patches}}/shared.patch
+
   case "$TARGET_OS" in
   ios)
     patch -d {{pdfium}} -p1 < {{patches}}/ios.patch
@@ -83,7 +87,7 @@ build: clone_depot_tools
     ninja -C out/{{target}} pdfium -v
   popd
 
-pack:
+pack_base:
   #!/usr/bin/env bash
   set -euox pipefail
   
@@ -97,15 +101,31 @@ pack:
   rm -f {{dist}}/include/DEPS
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
-  
-  case "$TARGET_OS" in
-  win)
-    cp {{pdfium}}/out/{{target}}/obj/pdfium.lib {{dist}}/lib
-    ;;
-  *)
-    cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib
-    ;;
-  esac
+
+[linux]
+pack: pack_base
+  if "{{static_lib}}" == "true"; then \
+    cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib; \
+  else \
+    cp {{pdfium}}/out/{{target}}/libpdfium.so {{dist}}/lib; \
+  fi
+
+[macos]
+pack: pack_base
+  if "{{static_lib}}" == "true"; then \
+    cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib; \
+  else \
+    cp {{pdfium}}/out/{{target}}/libpdfium.dylib {{dist}}/lib; \
+  fi
+
+[windows]
+pack: pack_base
+  if "{{static_lib}}" == "true"; then \
+    cp {{pdfium}}/out/{{target}}/obj/pdfium.lib {{dist}}/lib; \
+  else \
+    cp {{pdfium}}/out/{{target}}/pdfium.lib {{dist}}/lib; \
+    cp {{pdfium}}/out/{{target}}/pdfium.dll.lib {{dist}}/lib; \
+  fi
 
 test:
   echo "test"
