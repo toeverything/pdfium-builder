@@ -3,11 +3,12 @@ set dotenv-load
 depot_tools_repo := "https://chromium.googlesource.com/chromium/tools/depot_tools.git"
 pdfium_repo := "https://pdfium.googlesource.com/pdfium.git"
 
-pdfium_version := env_var_or_default('PDFIUM_VERSION', "6694")
+pdfium_version := env_var_or_default("PDFIUM_VERSION", "6666")
 target_os := env_var("TARGET_OS")
 target_cpu := env_var("TARGET_CPU")
 debug := env_var_or_default("DEBUG", "false") # release or debug
 static_lib := env_var_or_default("STATIC_LIB", "true") # static or shared
+enable_v8 := env_var_or_default("ENABLE_V8", "false") # v8
 target := if env_var("TARGET_OS") == env_var("TARGET_CPU") { "$TARGET_OS" } else { "$TARGET_OS-$TARGET_CPU" }
 
 args := env_var("PWD") / "args"
@@ -51,6 +52,7 @@ build: clone_depot_tools
     echo 'target_cpu = "{{target_cpu}}"'
     echo 'pdf_is_complete_lib = {{static_lib}}'
     echo 'is_debug = {{debug}}'
+    echo 'pdf_enable_v8 = false = {{enable_v8}}'
     cat {{args}}/common.gn
     [ "{{debug}}" == "false" ] && cat {{args}}/release.gn
     if [ -f {{args}}/$TARGET_OS.gn ]; then

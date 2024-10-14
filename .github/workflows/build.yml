@@ -12,7 +12,7 @@ on:
         description: PDFium version
         type: string
         required: false
-        default: "6694"
+        default: "6666"
       target_os:
         description: Target OS (android|ios|linux|mac|wasm|win)
         type: string
@@ -127,11 +127,12 @@ jobs:
         shell: bash
         run: |
           cat >> $GITHUB_ENV <<END
-          PDFIUM_VERSION=${{ inputs.version }}
           TARGET_OS = "${{ inputs.target_os }}"
           TARGET_CPU = "${{ inputs.target_cpu }}"
           STATIC_LIB = ${{ inputs.static_lib }}
           DEBUG = ${{ inputs.debug }}
+          ENABLE_V8 = ${{ inputs.enable_v8 }}
+          PDFIUM_VERSION=${{ inputs.version }}
           END
 
           [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = \"${{ inputs.target_environment }}\"" >> .env
