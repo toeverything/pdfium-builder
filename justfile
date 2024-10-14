@@ -51,11 +51,11 @@ build: clone_depot_tools
   
   case "$target_os" in
   ios)
-    git -C {{pdfium}} apply -v {{patches}}/ios.build.patch
-    git -C {{pdfium}}/build apply -v {{patches}}/ios.config.patch
+    patch -d {{pdfium}} -p1 < {{patches}}/ios.build.patch
+    patch -d {{pdfium}}/build -p1 < {{patches}}/ios.config.patch
     ;;
   win)
-    #git -C {{pdfium}}/build apply --reject --whitespace=fix -v {{patches}}/win.toolchain.patch
+    patch -d {{pdfium}}/build -p1 < {{patches}}/win.toolchain.patch
     ;;
   esac
 
@@ -75,7 +75,7 @@ pack:
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
   
-  #git -C {{pdfium}} apply --reject --whitespace=fix -v {{patches}}/headers.patch
+  patch -d {{pdfium}} -p1 < {{patches}}/headers.patch
   
   cp -r {{pdfium}}/public/* {{dist}}/include/
   rm -f {{dist}}/include/DEPS
