@@ -126,7 +126,7 @@ jobs:
       - name: Set environment variables
         shell: bash
         run: |
-          cat >> $GITHUB_ENV <<END
+          cat >> .env <<END
           TARGET_OS = "${{ inputs.target_os }}"
           TARGET_CPU = "${{ inputs.target_cpu }}"
           STATIC_LIB = ${{ inputs.static_lib }}
