@@ -137,14 +137,17 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          just build pack
+          just -v build pack
       - name: Configure
         run: |
+          target="${{ inputs.target_os }}"
+          [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && target="$target-${{ inputs.target_cpu }}"
+
           cat <<END >>$GITHUB_STEP_SUMMARY
           ## args.gn
 
           \`\`\`gn
-          $(cat pdfium/out/${{ inputs.target_os }}/args.gn)
+          $(cat pdfium/out/$target/args.gn)
           \`\`\`
           END
         shell: bash

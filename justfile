@@ -20,7 +20,7 @@ clone_pdfium:
 
 build: clone_depot_tools
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -euox pipefail
 
   export PATH="$PATH:$PWD/depot_tools"
   export DEPOT_TOOLS_WIN_TOOLCHAIN=0
@@ -30,6 +30,7 @@ build: clone_depot_tools
     pdfium/third_party/libjpeg_turbo \
     pdfium/base/allocator/partition_allocator; do
     if [ -e "$folder" ]; then
+      git -C $folder checkout .
       git -C $folder reset --hard
       git -C $folder clean -df
     fi
@@ -47,19 +48,18 @@ build: clone_depot_tools
     cat .release.env
   )
   args="$(echo $env | sed 's/ = /=/g' | sort)"
-  patches_dir="{{patches}}"
+  
+  case "$target_os" in
+  ios)
+    git -C {{pdfium}} apply -v {{patches}}/ios.build.patch
+    git -C {{pdfium}}/build apply -v {{patches}}/ios.config.patch
+    ;;
+  win)
+    git -C {{pdfium}}/build apply --reject --whitespace=fix -v {{patches}}/win.toolchain.patch
+    ;;
+  esac
 
   pushd {{pdfium}}
-    case "$target_os" in
-    ios)
-      git apply -v $patches_dir/ios.build.patch
-      git -C build apply -v $patches_dir/ios.config.patch
-      ;;
-    win)
-      git -C build apply -v $patches_dir/win.toolchain.patch
-      ;;
-    esac
-    
     gn gen out/{{target}} --args="$args"
     ninja -C out/{{target}} pdfium -v
   popd
@@ -69,17 +69,13 @@ test:
 
 pack:
   #!/usr/bin/env bash
-  set -euo pipefail
+  set -euox pipefail
   
-  patches_dir="{{patches}}"
-
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
   
-  pushd {{pdfium}}
-    git apply -v $patches_dir/headers.patch
-  popd
+  git -C {{pdfium}} apply --reject --whitespace=fix -v {{patches}}/headers.patch
   
   cp -r {{pdfium}}/public/* {{dist}}/include/
   rm -f {{dist}}/include/DEPS
