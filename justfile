@@ -21,7 +21,13 @@ clone_depot_tools:
 
 clone_pdfium:
   [ -d "pdfium" ] || gclient config --unmanaged {{pdfium_repo}} --custom-var checkout_configuration=minimal
-  [ -f ".gclient" ] && echo "target_os = [ '$TARGET_OS' ]" >> .gclient
+  if [ -f ".gclient" ]; then \
+    if [ "$(grep -c "target_os" .gclient)" ]; then \
+      sed -i -e 's/target_os = \[.*\]/target_os = \['\'$TARGET_OS\''\]/g' .gclient; \
+    else \
+      echo "target_os = ['$TARGET_OS']" >> .gclient; \
+    fi \
+  fi
 
   gclient sync -r origin/chromium/{{pdfium_version}} --no-history --shallow
 
@@ -88,9 +94,6 @@ build: clone_depot_tools
   popd
 
 pack_base:
-  #!/usr/bin/env bash
-  set -euox pipefail
-  
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
