@@ -126,9 +126,7 @@ pack: pack_base
   if "{{static_lib}}" == "true"; then \
     cp {{pdfium}}/out/{{target}}/obj/pdfium.lib {{dist}}/lib; \
   else \
-    ls -la {{pdfium}}/out/{{target}}/;\
-    ls -la {{pdfium}}/out/{{target}}/out;\
-    cp {{pdfium}}/out/{{target}}/pdfium.lib {{dist}}/lib; \
+    cp {{pdfium}}/out/{{target}}/pdfium.dll {{dist}}/lib; \
     cp {{pdfium}}/out/{{target}}/pdfium.dll.lib {{dist}}/lib; \
   fi
 
