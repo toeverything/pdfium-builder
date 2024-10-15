@@ -45,7 +45,7 @@ on:
         description: Emscripten SDK
         type: string
         required: false
-        default: 3.1.34
+        default: 3.1.69
     outputs:
       artifact:
         description: "The name of the artifact"
@@ -123,6 +123,12 @@ jobs:
       - name: Install Just
         uses: extractions/setup-just@v2
 
+      # - name: Install EMSDK
+      #   if: ${{ inputs.target_os == 'wasm' }}
+      #   uses: mymindstorm/setup-emsdk@v14
+      #   with:
+      #     version: ${{ inputs.emsdk_version }}
+
       - name: Set environment variables
         shell: bash
         run: |
@@ -137,10 +143,12 @@ jobs:
 
           [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = \"${{ inputs.target_environment }}\"" >> .env
           echo "${PWD}/depot_tools" >> $GITHUB_PATH
+
       - name: Build
         shell: bash
         run: |
           just -v build pack
+
       - name: Configure
         run: |
           target="${{ inputs.target_os }}"

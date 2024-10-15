@@ -8,7 +8,7 @@ PDFium dynamic library and static library builder, inspired by [pdfium-binaries]
 
 ### Local Build
 
-Creates an `.env` file
+Creates a `.env` file
 
 ```console
 $ cat .env
