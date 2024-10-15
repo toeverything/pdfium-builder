@@ -22,10 +22,10 @@ clone_depot_tools:
 clone_pdfium:
   [ -d "pdfium" ] || gclient config --unmanaged {{pdfium_repo}} --custom-var checkout_configuration=minimal
   if [ -f ".gclient" ]; then \
-    if [ "$(grep -c "target_os" .gclient)" ]; then \
-      sed -i -e 's/target_os = \[.*\]/target_os = \['\'$TARGET_OS\''\]/g' .gclient; \
-    else \
+    if [ $(grep -c "target_os" .gclient) -eq 0 ]; then \
       echo "target_os = ['$TARGET_OS']" >> .gclient; \
+    else \
+      sed -i -e 's/target_os = \[.*\]/target_os = \['\'$TARGET_OS\''\]/g' .gclient; \
     fi \
   fi
 
