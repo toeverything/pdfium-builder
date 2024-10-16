@@ -8,9 +8,9 @@ PDFium dynamic library and static library builder, inspired by [pdfium-binaries]
 | mac   | arm64 |             |       |
 | mac   | x64   |             |       |
 | linux | arm64 |             |       |
-| linux | x64 | |             |       |
+| linux | x64   |             |       |
 | win   | arm64 |             |       |
-| win   | x64 | |             |       |
+| win   | x64   |             |       |
 
 ### Usage
 
