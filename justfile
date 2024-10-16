@@ -132,10 +132,11 @@ pack: pack-base
   fi
 
 [group('wasm')]
-build-wasm flag=(if debug == "true" {"-g"} else {"-O2"}):
+build-wasm es6='0' flag=(if debug == "true" {"-g"} else {"-O2"}) ext=(if es6 == "0" {""} else {".esm"}):
   em++ \
     -s "EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions`]" \
     -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports] \
+    -s LLD_REPORT_UNDEFINED \
     -s DEMANGLE_SUPPORT=1 \
     -s USE_ZLIB=1 \
     -s USE_LIBJPEG=1 \
@@ -143,14 +144,14 @@ build-wasm flag=(if debug == "true" {"-g"} else {"-O2"}):
     -s ALLOW_MEMORY_GROWTH=1 \
     -s MODULARIZE \
     -s EXPORT_NAME=PDFiumModule \
-    -s WASM=1 \
+    -s EXPORT_ES6={{es6}} \
     -std=c++11 \
     -Wall \
     --no-entry \
     {{flag}} \
     -I{{dist}}/include \
     {{dist}}/lib/libpdfium.a \
-    -o {{dist}}/pdfium.js
+    -o {{dist}}/pdfium{{ext}}.js
 
 [group('wasm')]
 list-exported-functions:
