@@ -149,6 +149,8 @@ jobs:
         run: |
           just -v build pack
 
+          [ "${{ inputs.target_os }}" == "wasm" ] && just -v build-wasm
+
       - name: Configure
         run: |
           target="${{ inputs.target_os }}"

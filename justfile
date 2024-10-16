@@ -16,10 +16,10 @@ dist := env_var("PWD") / "dist"
 patches := env_var("PWD") / "patches"
 pdfium := env_var("PWD") / "pdfium"
 
-clone_depot_tools:
+clone-depot-tools:
   [ -d "depot_tools" ] || git clone {{depot_tools_repo}}
 
-clone_pdfium:
+clone-pdfium:
   [ -d "pdfium" ] || gclient config --unmanaged {{pdfium_repo}} --custom-var checkout_configuration=minimal
   if [ -f ".gclient" ]; then \
     if [ $(grep -c "target_os" .gclient) -eq 0 ]; then \
@@ -31,7 +31,7 @@ clone_pdfium:
 
   gclient sync -r origin/chromium/{{pdfium_version}} --no-history --shallow
 
-build: clone_depot_tools
+build: clone-depot-tools
   #!/usr/bin/env bash
   set -euox pipefail
 
@@ -49,7 +49,7 @@ build: clone_depot_tools
     fi
   done
 
-  just clone_pdfium
+  just clone-pdfium
 
   mkdir -p {{pdfium}}/out/{{target}}
 
@@ -93,7 +93,7 @@ build: clone_depot_tools
     ninja -C out/{{target}} pdfium -v
   popd
 
-pack_base:
+pack-base:
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
@@ -105,8 +105,9 @@ pack_base:
   rm -f {{dist}}/include/README
   rm -f {{dist}}/include/PRESUBMIT.py
 
+
 [linux]
-pack: pack_base
+pack: pack-base
   if "{{static_lib}}" == "true"; then \
     cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib; \
   else \
@@ -114,7 +115,7 @@ pack: pack_base
   fi
 
 [macos]
-pack: pack_base
+pack: pack-base
   if "{{static_lib}}" == "true"; then \
     cp {{pdfium}}/out/{{target}}/obj/libpdfium.a {{dist}}/lib; \
   else \
@@ -122,7 +123,7 @@ pack: pack_base
   fi
 
 [windows]
-pack: pack_base
+pack: pack-base
   if "{{static_lib}}" == "true"; then \
     cp {{pdfium}}/out/{{target}}/obj/pdfium.lib {{dist}}/lib; \
   else \
@@ -130,8 +131,30 @@ pack: pack_base
     cp {{pdfium}}/out/{{target}}/pdfium.dll.lib {{dist}}/lib; \
   fi
 
-list_pdfium_wasm_fns:
-  llvm-nm {{dist}}/lib/libpdfium.a --format=just-symbols --quiet | grep "^FPDF\|^FSDK\|^FORM\|^IFSDK" | sed 's/^/_/' | sort | uniq
+[group('wasm')]
+build-wasm flag=(if debug == "true" {"-g"} else {"-O2"}):
+  em++ \
+    -s "EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions`]" \
+    -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports] \
+    -s DEMANGLE_SUPPORT=1 \
+    -s USE_ZLIB=1 \
+    -s USE_LIBJPEG=1 \
+    -s ASSERTIONS=1 \
+    -s ALLOW_MEMORY_GROWTH=1 \
+    -s MODULARIZE \
+    -s EXPORT_NAME=PDFiumModule \
+    -s WASM=1 \
+    -std=c++11 \
+    -Wall \
+    --no-entry \
+    {{flag}} \
+    -I{{dist}}/include \
+    {{dist}}/lib/libpdfium.a \
+    -o {{dist}}/pdfium.js
+
+[group('wasm')]
+list-exported-functions:
+  llvm-nm {{dist}}/lib/libpdfium.a --format=just-symbols --quiet | grep "^FPDF\|^FSDK\|^FORM\|^IFSDK" | sed 's/^/_/' | sort | uniq | paste -sd "," -
 
 test:
   echo "test"
