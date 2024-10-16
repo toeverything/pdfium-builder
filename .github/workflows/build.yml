@@ -12,7 +12,7 @@ on:
         description: PDFium version
         type: string
         required: false
-        default: "6666"
+        default: '6666'
       target_os:
         description: Target OS (android|ios|linux|mac|wasm|win)
         type: string
@@ -25,7 +25,7 @@ on:
         description: Target environment (device|catalyst|simulator|musl)
         type: string
         required: false
-        default: ""
+        default: ''
       static_lib:
         description: Static Library
         type: boolean
@@ -48,7 +48,7 @@ on:
         default: 3.1.69
     outputs:
       artifact:
-        description: "The name of the artifact"
+        description: 'The name of the artifact'
         value: ${{ jobs.build.outputs.artifact }}
 
 jobs:

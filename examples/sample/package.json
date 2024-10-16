@@ -1,0 +1,10 @@
+{
+  "name": "sample",
+  "private": true,
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "vite": "^5.4.9"
+  }
+}

@@ -71,7 +71,7 @@ build: clone-depot-tools
     fi
   )
   args="$(echo $env | sed 's/ = /=/g' | sort)"
-  
+
   [ "{{static_lib}}" == "false" ] && patch -d {{pdfium}} -p1 < {{patches}}/shared.patch
 
   case "$TARGET_OS" in
@@ -97,9 +97,9 @@ pack-base:
   mkdir -p {{dist}}
   mkdir -p {{dist}}/lib
   mkdir -p {{dist}}/include
-  
+
   patch -d {{pdfium}} -p1 < {{patches}}/headers.patch
-  
+
   cp -r {{pdfium}}/public/* {{dist}}/include/
   rm -f {{dist}}/include/DEPS
   rm -f {{dist}}/include/README
@@ -132,30 +132,35 @@ pack: pack-base
   fi
 
 [group('wasm')]
-build-wasm es6='0' flag=(if debug == "true" {"-g"} else {"-O2"}) ext=(if es6 == "0" {""} else {".esm"}):
+build-wasm es6='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
   em++ \
-    -s "EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions`]" \
-    -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports] \
-    -s LLD_REPORT_UNDEFINED \
+    -s EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions | paste -sd "," -`] \
+    -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports,stringToUTF8,lengthBytesUTF8] \
+    -s EXPORT_NAME=PDFiumModule \
     -s DEMANGLE_SUPPORT=1 \
     -s USE_ZLIB=1 \
     -s USE_LIBJPEG=1 \
     -s ASSERTIONS=1 \
     -s ALLOW_MEMORY_GROWTH=1 \
-    -s MODULARIZE \
-    -s EXPORT_NAME=PDFiumModule \
+    -s MODULARIZE=1 \
+    -s WASM=1 \
     -s EXPORT_ES6={{es6}} \
+    -s ENVIRONMENT=worker \
     -std=c++11 \
     -Wall \
     --no-entry \
     {{flag}} \
     -I{{dist}}/include \
     {{dist}}/lib/libpdfium.a \
-    -o {{dist}}/pdfium{{ext}}.js
+    -o {{dist}}/pdfium.js
 
 [group('wasm')]
 list-exported-functions:
-  llvm-nm {{dist}}/lib/libpdfium.a --format=just-symbols --quiet | grep "^FPDF\|^FSDK\|^FORM\|^IFSDK" | sed 's/^/_/' | sort | uniq | paste -sd "," -
+  llvm-nm {{dist}}/lib/libpdfium.a --format=just-symbols --quiet \
+  | grep "^FPDF\|^FSDK\|^FORM\|^IFSDK" \
+  | sed 's/^/_/' \
+  | sort \
+  | uniq
 
 test:
   echo "test"

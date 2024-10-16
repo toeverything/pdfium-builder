@@ -10,7 +10,7 @@ on:
       version:
         description: PDFium version
         required: false
-        default: "6666"
+        default: '6666'
       target_os:
         description: Target OS
         type: choice
@@ -35,9 +35,9 @@ on:
       target_environment:
         description: Target environment
         type: choice
-        default: ""
+        default: ''
         options:
-          - ""
+          - ''
           - device
           - catalyst
           - simulator

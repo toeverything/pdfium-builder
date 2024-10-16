@@ -1,0 +1,33 @@
+{
+  "name": "pdfium-builder",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/sample"
+  ],
+  "scripts": {
+    "lint:prettier": "prettier --ignore-unknown --cache --check .",
+    "lint:prettier:fix": "prettier --ignore-unknown --cache --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown --cache",
+    "*.{ts,tsx,mjs,js,jsx}": [
+      "prettier --ignore-unknown --write",
+      "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" eslint --cache --fix"
+    ],
+    "*.toml": [
+      "taplo format"
+    ],
+    "*.rs": [
+      "cargo fmt --"
+    ]
+  },
+  "devDependencies": {
+    "@taplo/cli": "^0.7.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.9"
+  }
+}
