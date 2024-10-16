@@ -2,15 +2,15 @@
 
 PDFium dynamic library and static library builder, inspired by [pdfium-binaries] and [pdfium-lib].
 
-| OS | CPU | Toolchain | Ext |
-| ----- | ----- | ---------- | .wasm |
-| wasm | wasm | emscripten | .a |
-| mac | arm64 | | |
-| mac | x64 | | |
-| linux | arm64 | | |
-| linux | x64 | | |
-| win | arm64 | | |
-| win | x64 | | |
+| OS    | CPU   | Toolchain   | Ext   |
+| ----- | ----- | ----------- | ------|
+| wasm  | wasm  | Emscripten  | .wasm |
+| mac   | arm64 |             |       |
+| mac   | x64   |             |       |
+| linux | arm64 |             |       |
+| linux | x64 | |             |       |
+| win   | arm64 |             |       |
+| win   | x64 | |             |       |
 
 ### Usage
 
@@ -26,7 +26,7 @@ $ just list-exported-functions | fzf
 $ eza -T dist
 dist
 ├── include
-...........
+│..........
 │  ├── fpdf_thumbnail.h
 │  ├── fpdf_transformpage.h
 │  └── fpdfview.h
