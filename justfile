@@ -130,5 +130,8 @@ pack: pack_base
     cp {{pdfium}}/out/{{target}}/pdfium.dll.lib {{dist}}/lib; \
   fi
 
+list_pdfium_wasm_fns:
+  llvm-nm {{dist}}/lib/libpdfium.a --format=just-symbols --quiet | grep "^FPDF\|^FSDK\|^FORM\|^IFSDK" | sed 's/^/_/' | sort | uniq
+
 test:
   echo "test"
