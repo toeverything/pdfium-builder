@@ -136,7 +136,7 @@ pack: pack-base
 build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
   em++ \
     -s EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions | paste -sd "," -`] \
-    -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports,stringToUTF8,lengthBytesUTF8] \
+    -s EXPORTED_RUNTIME_METHODS=[`just list-runtime-methods | sed 's/ /,/g'`] \
     -s EXPORT_ES6={{esm}} \
     -s EXPORT_NAME={{name}} \
     -s DEMANGLE_SUPPORT=1 \
@@ -164,9 +164,18 @@ list-exported-functions:
   | uniq
 
 [group('wasm')]
+list-runtime-methods:
+  echo \
+    ccall \
+    cwrap \
+    wasmExports \
+    stringToUTF8 \
+    lengthBytesUTF8
+
+[group('wasm')]
 install-wasm:
     mkdir -p {{packages}}/pdfium/dist
-    cp {{dist}}/pdfium.js  {{dist}}/pdfium.wasm {{packages}}/pdfium/dist
+    cp {{dist}}/pdfium.js {{dist}}/pdfium.wasm {{packages}}/pdfium/dist
 
 test:
   echo "test"
