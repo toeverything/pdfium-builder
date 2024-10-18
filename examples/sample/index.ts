@@ -50,8 +50,8 @@ async function run() {
 
   const pageIdx = 0;
   const pagePtr = wasmExports.FPDF_LoadPage(documentIdx, pageIdx);
-  const originalWidth = wasmExports.FPDF_GetPageWidth(pagePtr);
-  const originalHeight = wasmExports.FPDF_GetPageHeight(pagePtr);
+  const originalWidth = wasmExports.FPDF_GetPageWidthF(pagePtr);
+  const originalHeight = wasmExports.FPDF_GetPageHeightF(pagePtr);
 
   const scale = 2;
   const format = 4;

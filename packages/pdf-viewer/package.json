@@ -2,6 +2,9 @@
   "name": "@toeverything/pdf-viewer",
   "version": "0.1.0",
   "private": true,
+  "author": "toeverything",
+  "license": "MPL-2.0",
+  "type": "module",
   "dependencies": {
     "@toeverything/pdf-viewer-types": "workspace:*",
     "@toeverything/pdfium": "workspace:*"

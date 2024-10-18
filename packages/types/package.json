@@ -1,8 +1,11 @@
 {
   "name": "@toeverything/pdf-viewer-types",
-  "private": true,
   "description": "pdf-viewer types",
   "version": "0.1.0",
+  "private": true,
+  "author": "toeverything",
+  "license": "MPL-2.0",
+  "type": "module",
   "types": "index.d.ts",
   "files": [
     "index.d.ts"
