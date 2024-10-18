@@ -1,5 +1,6 @@
 import init from '@toeverything/pdfium';
 import wasmUrl from '@toeverything/pdfium/wasm?url';
+import minimalPdf from '@toeverything/resources/minimal.pdf?url';
 
 async function run() {
   const module = await init({
@@ -16,7 +17,7 @@ async function run() {
     m_v8EmbedderSlot: 0,
   });
 
-  const req = await fetch('./resources/minimal.pdf');
+  const req = await fetch(minimalPdf);
   const buffer = await req.arrayBuffer();
   const bytes = new Uint8Array(buffer);
   const size = bytes.length;

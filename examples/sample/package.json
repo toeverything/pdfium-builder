@@ -5,7 +5,8 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@toeverything/pdfium": "workspace:*"
+    "@toeverything/pdfium": "workspace:*",
+    "@toeverything/resources": "workspace:*"
   },
   "devDependencies": {
     "vite": "^5.4.9"

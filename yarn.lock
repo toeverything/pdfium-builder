@@ -351,6 +351,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@toeverything/resources@workspace:*, @toeverything/resources@workspace:packages/resources":
+  version: 0.0.0-use.local
+  resolution: "@toeverything/resources@workspace:packages/resources"
+  languageName: unknown
+  linkType: soft
+
 "@types/estree@npm:1.0.6":
   version: 1.0.6
   resolution: "@types/estree@npm:1.0.6"
@@ -1483,6 +1489,7 @@ __metadata:
   resolution: "sample@workspace:examples/sample"
   dependencies:
     "@toeverything/pdfium": "workspace:*"
+    "@toeverything/resources": "workspace:*"
     vite: "npm:^5.4.9"
   languageName: unknown
   linkType: soft

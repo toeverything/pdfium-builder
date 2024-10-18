@@ -1,0 +1,10 @@
+{
+  "name": "@toeverything/resources",
+  "private": true,
+  "description": "pdf resources",
+  "version": "0.1.0",
+  "main": "index.ts",
+  "files": [
+    "*.pdf"
+  ]
+}
