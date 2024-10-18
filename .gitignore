@@ -2,6 +2,7 @@
 
 depot_tools
 pdfium
+!packages/pdfium
 
 .cipd
 .gc*

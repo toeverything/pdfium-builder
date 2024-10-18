@@ -1,0 +1,19 @@
+{
+  "name": "@toeverything/pdfium",
+  "description": "PDFium WASM vendored",
+  "private": true,
+  "version": "0.1.0",
+  "main": "./pdfium.js",
+  "exports": {
+    ".": {
+      "import": "./pdfium.js"
+    },
+    "./wasm": {
+      "import": "./pdfium.wasm"
+    }
+  },
+  "files": [
+    "pdfium.js",
+    "pdfium.wasm"
+  ]
+}

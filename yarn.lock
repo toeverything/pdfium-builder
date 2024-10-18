@@ -330,6 +330,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@toeverything/pdf-viewer-types@workspace:*, @toeverything/pdf-viewer-types@workspace:packages/types":
+  version: 0.0.0-use.local
+  resolution: "@toeverything/pdf-viewer-types@workspace:packages/types"
+  languageName: unknown
+  linkType: soft
+
+"@toeverything/pdf-viewer@workspace:packages/pdf-viewer":
+  version: 0.0.0-use.local
+  resolution: "@toeverything/pdf-viewer@workspace:packages/pdf-viewer"
+  dependencies:
+    "@toeverything/pdf-viewer-types": "workspace:*"
+    "@toeverything/pdfium": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@toeverything/pdfium@workspace:*, @toeverything/pdfium@workspace:packages/pdfium":
+  version: 0.0.0-use.local
+  resolution: "@toeverything/pdfium@workspace:packages/pdfium"
+  languageName: unknown
+  linkType: soft
+
 "@types/estree@npm:1.0.6":
   version: 1.0.6
   resolution: "@types/estree@npm:1.0.6"
@@ -1461,6 +1482,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sample@workspace:examples/sample"
   dependencies:
+    "@toeverything/pdfium": "workspace:*"
     vite: "npm:^5.4.9"
   languageName: unknown
   linkType: soft

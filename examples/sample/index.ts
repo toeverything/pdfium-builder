@@ -1,12 +1,14 @@
-import init from './pdfium';
-import wasmUrl from './pdfium.wasm?url';
+import init from '@toeverything/pdfium';
+import wasmUrl from '@toeverything/pdfium/wasm?url';
 
 async function run() {
   const module = await init({
     locateFile: () => wasmUrl,
   });
 
-  module._FPDF_InitLibraryWithConfig({
+  const wasmExports = module.wasmExports;
+
+  wasmExports.FPDF_InitLibraryWithConfig({
     version: 3,
     m_pIsolate: null,
     m_pPlatform: null,
@@ -20,33 +22,33 @@ async function run() {
   const size = bytes.length;
   const password = '';
 
-  const documentPtr = module.wasmExports.malloc(size);
+  const documentPtr = wasmExports.malloc(size);
   module.HEAPU8.set(bytes, documentPtr);
 
   let passwordPtr = 0;
   if (password) {
     const length = new TextEncoder().encode(password).length + 1;
-    const passwordPtr = module.wasmExports.malloc(length);
+    const passwordPtr = wasmExports.malloc(length);
     module.stringToUTF8(password, passwordPtr, length);
   }
 
-  const documentIdx = module._FPDF_LoadMemDocument(
+  const documentIdx = wasmExports.FPDF_LoadMemDocument(
     documentPtr,
     size,
     passwordPtr
   );
 
-  module.wasmExports.free(passwordPtr);
+  wasmExports.free(passwordPtr);
 
-  const errorCode = module._FPDF_GetLastError();
+  const errorCode = wasmExports.FPDF_GetLastError();
   if (errorCode) {
     throw new Error(`PDFium error code: ${errorCode}`);
   }
 
   const pageIdx = 0;
-  const pagePtr = module._FPDF_LoadPage(documentIdx, pageIdx);
-  const originalWidth = module._FPDF_GetPageWidth(pagePtr);
-  const originalHeight = module._FPDF_GetPageHeight(pagePtr);
+  const pagePtr = wasmExports.FPDF_LoadPage(documentIdx, pageIdx);
+  const originalWidth = wasmExports.FPDF_GetPageWidth(pagePtr);
+  const originalHeight = wasmExports.FPDF_GetPageHeight(pagePtr);
 
   const scale = 2;
   const format = 4;
@@ -55,10 +57,10 @@ async function run() {
   const height = Math.ceil(originalHeight * scale);
   const bitmapHeapLength = width * height * bytesPerPixel;
 
-  const bitmapHeapPtr = module.wasmExports.malloc(bitmapHeapLength);
+  const bitmapHeapPtr = wasmExports.malloc(bitmapHeapLength);
   module.HEAPU8.fill(0, bitmapHeapPtr, bitmapHeapPtr + bitmapHeapLength);
 
-  const bitmapPtr = module._FPDFBitmap_CreateEx(
+  const bitmapPtr = wasmExports.FPDFBitmap_CreateEx(
     width,
     height,
     format,
@@ -66,9 +68,9 @@ async function run() {
     width * bytesPerPixel
   );
 
-  module._FPDFBitmap_FillRect(bitmapPtr, 0, 0, width, height, 0xffffffff);
+  wasmExports.FPDFBitmap_FillRect(bitmapPtr, 0, 0, width, height, 0xffffffff);
 
-  module._FPDF_RenderPageBitmap(
+  wasmExports.FPDF_RenderPageBitmap(
     bitmapPtr,
     pagePtr,
     0,
@@ -78,15 +80,15 @@ async function run() {
     0,
     0x10 | 0x01
   );
-  module._FPDFBitmap_Destroy(bitmapPtr);
-  module._FPDF_ClosePage(pagePtr);
+  wasmExports.FPDFBitmap_Destroy(bitmapPtr);
+  wasmExports.FPDF_ClosePage(pagePtr);
 
   const data = module.HEAPU8.subarray(
     bitmapHeapPtr,
     bitmapHeapPtr + bitmapHeapLength
   );
 
-  module.wasmExports.free(bitmapHeapPtr);
+  wasmExports.free(bitmapHeapPtr);
 
   const imageData = new ImageData(new Uint8ClampedArray(data), width, height);
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

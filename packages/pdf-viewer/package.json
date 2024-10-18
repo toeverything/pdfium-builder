@@ -1,8 +1,9 @@
 {
   "name": "@toeverything/pdf-viewer",
-  "versoin":"0.1.0",
-  "priviate": true,
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@toeverything/pdf-viewer-types": "workspace:*"
+    "@toeverything/pdf-viewer-types": "workspace:*",
+    "@toeverything/pdfium": "workspace:*"
   }
 }
