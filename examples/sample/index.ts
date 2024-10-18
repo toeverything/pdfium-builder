@@ -15,7 +15,6 @@ async function run() {
   });
 
   const req = await fetch('./resources/minimal.pdf');
-
   const buffer = await req.arrayBuffer();
   const bytes = new Uint8Array(buffer);
   const size = bytes.length;
@@ -90,9 +89,9 @@ async function run() {
   module.wasmExports.free(bitmapHeapPtr);
 
   const imageData = new ImageData(new Uint8ClampedArray(data), width, height);
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.putImageData(imageData, 0, 0);
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+  const ctx = canvas!.getContext('2d');
+  ctx!.putImageData(imageData, 0, 0);
 }
 
 run();

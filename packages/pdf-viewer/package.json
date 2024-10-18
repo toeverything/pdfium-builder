@@ -1,0 +1,8 @@
+{
+  "name": "@toeverything/pdf-viewer",
+  "versoin":"0.1.0",
+  "priviate": true,
+  "dependencies": {
+    "@toeverything/pdf-viewer-types": "workspace:*"
+  }
+}
