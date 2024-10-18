@@ -3,17 +3,16 @@
   "description": "PDFium WASM vendored",
   "private": true,
   "version": "0.1.0",
-  "main": "./pdfium.js",
+  "main": "./dist/pdfium.js",
   "exports": {
     ".": {
-      "import": "./pdfium.js"
+      "import": "./dist/pdfium.js"
     },
     "./wasm": {
-      "import": "./pdfium.wasm"
+      "import": "./dist/pdfium.wasm"
     }
   },
   "files": [
-    "pdfium.js",
-    "pdfium.wasm"
+    "dist"
   ]
 }
