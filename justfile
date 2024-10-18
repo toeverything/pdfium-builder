@@ -15,6 +15,7 @@ args := env_var("PWD") / "args"
 dist := env_var("PWD") / "dist"
 patches := env_var("PWD") / "patches"
 pdfium := env_var("PWD") / "pdfium"
+packages := env_var("PWD") / "packages"
 
 clone-depot-tools:
   [ -d "depot_tools" ] || git clone {{depot_tools_repo}}
@@ -132,11 +133,12 @@ pack: pack-base
   fi
 
 [group('wasm')]
-build-wasm es6='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
+build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
   em++ \
     -s EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions | paste -sd "," -`] \
     -s EXPORTED_RUNTIME_METHODS=[ccall,cwrap,wasmExports,stringToUTF8,lengthBytesUTF8] \
-    -s EXPORT_NAME=PDFiumModule \
+    -s EXPORT_ES6={{esm}} \
+    -s EXPORT_NAME={{name}} \
     -s DEMANGLE_SUPPORT=1 \
     -s USE_ZLIB=1 \
     -s USE_LIBJPEG=1 \
@@ -144,7 +146,6 @@ build-wasm es6='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
     -s ALLOW_MEMORY_GROWTH=1 \
     -s MODULARIZE=1 \
     -s WASM=1 \
-    -s EXPORT_ES6={{es6}} \
     -s ENVIRONMENT=worker \
     -std=c++11 \
     -Wall \
@@ -161,6 +162,11 @@ list-exported-functions:
   | sed 's/^/_/' \
   | sort \
   | uniq
+
+[group('wasm')]
+install-wasm:
+    mkdir -p {{packages}}/pdfium/dist
+    cp {{dist}}/pdfium.js  {{dist}}/pdfium.wasm {{packages}}/pdfium/dist
 
 test:
   echo "test"
