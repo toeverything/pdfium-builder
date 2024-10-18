@@ -9,8 +9,12 @@ pdfium
 
 .env
 dist
+!packages/pdfium/dist
 
 .yarn/
 node_modules/
 
 target
+
+tsconfig.tsbuildinfo
+tsconfig.*.tsbuildinfo

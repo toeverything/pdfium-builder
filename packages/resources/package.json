@@ -1,8 +1,11 @@
 {
   "name": "@toeverything/resources",
-  "private": true,
   "description": "pdf resources",
   "version": "0.1.0",
+  "private": true,
+  "author": "toeverything",
+  "license": "MPL-2.0",
+  "type": "module",
   "files": [
     "*.pdf"
   ]

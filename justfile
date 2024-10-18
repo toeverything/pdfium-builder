@@ -132,9 +132,12 @@ pack: pack-base
     cp {{pdfium}}/out/{{target}}/pdfium.dll.lib {{dist}}/lib; \
   fi
 
+# https://github.com/emscripten-core/emscripten/blob/main/src/settings.js
+# `emc++ --help`
 [group('wasm')]
-build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O2"}):
+build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-Oz"}):
   em++ \
+    {{flag}} \
     -s EXPORTED_FUNCTIONS=[_malloc,_free,`just list-exported-functions | paste -sd "," -`] \
     -s EXPORTED_RUNTIME_METHODS=[`just list-runtime-methods | sed 's/ /,/g'`] \
     -s EXPORT_ES6={{esm}} \
@@ -150,10 +153,10 @@ build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O
     -std=c++11 \
     -Wall \
     --no-entry \
-    {{flag}} \
     -I{{dist}}/include \
-    {{dist}}/lib/libpdfium.a \
-    -o {{dist}}/pdfium.js
+    -L{{dist}}/lib \
+    -lpdfium \
+    -o {{dist}}/pdfium.ts
 
 [group('wasm')]
 list-exported-functions:
@@ -175,7 +178,8 @@ list-runtime-methods:
 [group('wasm')]
 install-wasm:
     mkdir -p {{packages}}/pdfium/dist
-    cp {{dist}}/pdfium.js {{dist}}/pdfium.wasm {{packages}}/pdfium/dist
+    cp {{dist}}/pdfium.js {{packages}}/pdfium/dist/index.js
+    cp {{dist}}/pdfium.wasm {{packages}}/pdfium/dist
 
 test:
   echo "test"

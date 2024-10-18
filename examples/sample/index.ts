@@ -1,9 +1,11 @@
-import init from '@toeverything/pdfium';
+/// <reference types="vite/client" />
+
+import createPDFium from '@toeverything/pdfium';
 import wasmUrl from '@toeverything/pdfium/wasm?url';
-import minimalPdf from '@toeverything/resources/minimal.pdf?url';
+import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
 
 async function run() {
-  const module = await init({
+  const module = await createPDFium({
     locateFile: () => wasmUrl,
   });
 
@@ -17,7 +19,7 @@ async function run() {
     m_v8EmbedderSlot: 0,
   });
 
-  const req = await fetch(minimalPdf);
+  const req = await fetch(minimalPDFUrl);
   const buffer = await req.arrayBuffer();
   const bytes = new Uint8Array(buffer);
   const size = bytes.length;
