@@ -156,7 +156,7 @@ build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O
     -I{{dist}}/include \
     -L{{dist}}/lib \
     -lpdfium \
-    -o {{dist}}/pdfium.ts
+    -o {{dist}}/pdfium.js
 
 [group('wasm')]
 list-exported-functions:
@@ -173,7 +173,8 @@ list-runtime-methods:
     cwrap \
     wasmExports \
     stringToUTF8 \
-    lengthBytesUTF8
+    lengthBytesUTF8 \
+    UTF16ToString
 
 [group('wasm')]
 install-wasm:

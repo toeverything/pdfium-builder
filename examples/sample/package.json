@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "@toeverything/pdfium": "workspace:*",
-    "@toeverything/resources": "workspace:*"
+    "@toeverything/resources": "workspace:*",
+    "@toeverything/pdf-viewer-types": "workspace:*"
   },
   "devDependencies": {
     "vite": "^5.4.9"

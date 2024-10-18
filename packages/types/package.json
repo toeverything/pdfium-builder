@@ -6,8 +6,13 @@
   "author": "toeverything",
   "license": "MPL-2.0",
   "type": "module",
-  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
   "files": [
-    "index.d.ts"
+    "src",
+    "dist"
   ]
 }

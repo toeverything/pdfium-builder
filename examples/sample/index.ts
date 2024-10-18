@@ -3,6 +3,7 @@
 import createPDFium from '@toeverything/pdfium';
 import wasmUrl from '@toeverything/pdfium/wasm?url';
 import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
+import { MetaTag } from '@toeverything/pdf-viewer-types';
 
 async function run() {
   const module = await createPDFium({
@@ -25,22 +26,17 @@ async function run() {
   const size = bytes.length;
   const password = '';
 
-  const documentPtr = wasmExports.malloc(size);
-  module.HEAPU8.set(bytes, documentPtr);
+  const bufferPtr = wasmExports.malloc(size);
+  module.HEAPU8.set(bytes, bufferPtr);
 
   let passwordPtr = 0;
   if (password) {
-    const length = new TextEncoder().encode(password).length + 1;
+    const length = new TextEncoder().encode(password).length;
     const passwordPtr = wasmExports.malloc(length);
-    module.stringToUTF8(password, passwordPtr, length);
+    module.stringToUTF8(password, passwordPtr, length + 1);
   }
 
-  const documentIdx = wasmExports.FPDF_LoadMemDocument(
-    documentPtr,
-    size,
-    passwordPtr
-  );
-
+  const docPtr = wasmExports.FPDF_LoadMemDocument(bufferPtr, size, passwordPtr);
   wasmExports.free(passwordPtr);
 
   const errorCode = wasmExports.FPDF_GetLastError();
@@ -48,8 +44,29 @@ async function run() {
     throw new Error(`PDFium error code: ${errorCode}`);
   }
 
+  const titleBuffer = new TextEncoder().encode(MetaTag.Producer);
+  const titleBufferPtr = wasmExports.malloc(titleBuffer.length);
+  module.stringToUTF8(MetaTag.Producer, titleBufferPtr, titleBuffer.length + 1);
+  const bufferLength = wasmExports.FPDF_GetMetaText(docPtr, titleBufferPtr);
+  if (bufferLength > 0) {
+    console.log(1, bufferLength);
+    const tempBuffer = new Uint8Array({ length: bufferLength });
+    const tempBufferPtr = wasmExports.malloc(tempBuffer.length);
+    const bufferLength2 = wasmExports.FPDF_GetMetaText(
+      docPtr,
+      titleBufferPtr,
+      tempBufferPtr,
+      tempBuffer.length
+    );
+    console.log(2, bufferLength2);
+    console.log(MetaTag.Producer, module.UTF16ToString(tempBufferPtr));
+
+    wasmExports.free(tempBufferPtr);
+    wasmExports.free(titleBufferPtr);
+  }
+
   const pageIdx = 0;
-  const pagePtr = wasmExports.FPDF_LoadPage(documentIdx, pageIdx);
+  const pagePtr = wasmExports.FPDF_LoadPage(docPtr, pageIdx);
   const originalWidth = wasmExports.FPDF_GetPageWidthF(pagePtr);
   const originalHeight = wasmExports.FPDF_GetPageHeightF(pagePtr);
 
@@ -85,6 +102,7 @@ async function run() {
   );
   wasmExports.FPDFBitmap_Destroy(bitmapPtr);
   wasmExports.FPDF_ClosePage(pagePtr);
+  wasmExports.FPDF_CloseDocument(docPtr);
 
   const data = module.HEAPU8.subarray(
     bitmapHeapPtr,
