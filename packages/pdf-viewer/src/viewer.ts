@@ -57,8 +57,8 @@ export class Viewer {
     if (!docPtr) {
       const code = this.lastErrorCode();
       if (!code) {
-        console.error(code);
         this.#bindings.free(docPtr);
+        console.error(code);
       }
       return;
     }
@@ -72,5 +72,13 @@ export class Viewer {
   async openWithBlob(blob: Blob, password?: string) {
     const buffer = new Uint8Array(await blob.arrayBuffer());
     return this.open(buffer, password);
+  }
+
+  /**
+   * Closes a PDF document.
+   */
+  close(docPtr: number) {
+    this.#bindings.FPDF_CloseDocument(docPtr);
+    this.#bindings.free(docPtr);
   }
 }

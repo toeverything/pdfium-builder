@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "examples/sample"
+    "examples/sample",
+    "examples/sample-wasm-bindgen"
   ],
   "scripts": {
     "lint:prettier": "prettier --ignore-unknown --cache --check .",

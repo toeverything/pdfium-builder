@@ -1602,10 +1602,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sample-wasm-bindgen@workspace:examples/sample-wasm-bindgen":
+  version: 0.0.0-use.local
+  resolution: "sample-wasm-bindgen@workspace:examples/sample-wasm-bindgen"
+  dependencies:
+    "@toeverything/pdf-viewer-types": "workspace:*"
+    "@toeverything/pdfium": "workspace:*"
+    "@toeverything/resources": "workspace:*"
+    vite: "npm:^5.4.9"
+  languageName: unknown
+  linkType: soft
+
 "sample@workspace:examples/sample":
   version: 0.0.0-use.local
   resolution: "sample@workspace:examples/sample"
   dependencies:
+    "@toeverything/pdf-viewer-types": "workspace:*"
     "@toeverything/pdfium": "workspace:*"
     "@toeverything/resources": "workspace:*"
     vite: "npm:^5.4.9"

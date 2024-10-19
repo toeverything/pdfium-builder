@@ -1,0 +1,18 @@
+[package]
+edition = "2021"
+name    = "sample-wasm-bindgen"
+publish = false
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+pdf-viewer = { workspace = true }
+
+# console_error_panic_hook = "0"
+# console_log              = "1"
+# log                      = "0.4"
+
+js-sys       = { workspace = true }
+wasm-bindgen = { workspace = true }

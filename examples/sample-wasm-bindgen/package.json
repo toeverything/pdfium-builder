@@ -1,8 +1,9 @@
 {
-  "name": "sample",
+  "name": "sample-wasm-bindgen",
   "private": true,
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build:wasm": " wasm-pack build --target=web -d dist"
   },
   "dependencies": {
     "@toeverything/pdf-viewer-types": "workspace:*",
