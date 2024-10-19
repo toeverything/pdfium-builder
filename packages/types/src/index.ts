@@ -1,5 +1,5 @@
 /**
- * PDFium ERR.
+ * PDFium Error Code.
  */
 export enum ErrorCode {
   // No error.
@@ -29,6 +29,9 @@ export enum BitmapFormat {
   BGR,
 }
 
+/**
+ * Metadata Tags.
+ */
 export enum MetaTag {
   Title = 'Title',
   Author = 'Author',

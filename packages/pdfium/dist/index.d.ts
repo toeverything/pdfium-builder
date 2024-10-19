@@ -1,7 +1,7 @@
 /**
  * PDFium Config.
  */
-interface FPDF_Config {
+export interface FPDF_Config {
   version: number;
   m_pIsolate: null;
   m_pPlatform: null;
@@ -10,7 +10,7 @@ interface FPDF_Config {
 }
 
 /**
- * PDFium bindings.
+ * PDFium Bindings.
  */
 export interface FPDF_Bindings {
   FPDF_InitLibraryWithConfig(config: FPDF_Config): void;
@@ -19,27 +19,33 @@ export interface FPDF_Bindings {
 
   // Returns document pointer
   FPDF_LoadMemDocument(
-    bufferPtr: number,
+    bytesPtr: number,
+    size: number,
+    passwordPtr: number
+  ): number;
+  // Returns document pointer
+  FPDF_LoadMemDocument64(
+    bytesPtr: number,
     size: number,
     passwordPtr: number
   ): number;
   FPDF_GetPageCount(docPtr: number): number;
   FPDF_GetFileVersion(docPtr: number, version: number): boolean;
   FPDF_GetPageSizeByIndexF(
-    docPtr: number,
+    docPtr: numbern,
     pageIdx: number,
     rectPtr: number
   ): boolean;
   FPDF_GetMetaText(
     docPtr: number,
     tagPtr: number,
-    bufferPtr?: number,
+    bytesPtr?: number,
     size?: number
   ): number;
   FPDF_GetPageLabel(
     docPtr: number,
     pageIdx: number,
-    bufferPtr?: number,
+    bytesPtr?: number,
     size?: number
   ): number;
   FPDF_CloseDocument(docPtr: number): void;
@@ -48,7 +54,7 @@ export interface FPDF_Bindings {
   FPDF_LoadPage(docPtr: number, pageIdx: number): number;
   FPDF_GetPageWidthF(pagePtr: number): number;
   FPDF_GetPageHeightF(pagePtr: number): number;
-  FPDF_GetPageBoundingBox(pagePtr: number, bufferPtr: number): boolean;
+  FPDF_GetPageBoundingBox(pagePtr: number, bytesPtr: number): boolean;
   FPDF_ClosePage(pagePtr: number): void;
 
   FPDFBitmap_Create(width: number, height: number, alpha: number): number;
@@ -95,7 +101,6 @@ export interface FPDF_Bindings {
 }
 
 /**
- *
  * PDFium WASM.
  */
 export interface WasmExports extends FPDF_Bindings {
