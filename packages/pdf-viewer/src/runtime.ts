@@ -39,12 +39,16 @@ export class Runtime {
     this.engine.stringToUTF8(str, strPtr, maxBytesToRead);
   }
 
-  UTF16ToString(ptr: number) {
-    return this.engine.UTF16ToString(ptr);
-  }
-
   stringToNewUTF8(str: string) {
     return this.engine.stringToNewUTF8(str);
+  }
+
+  UTF8ToString(ptr: number, maxBytesToRead?: number) {
+    return this.engine.UTF8ToString(ptr, maxBytesToRead);
+  }
+
+  UTF16ToString(ptr: number, maxBytesToRead?: number) {
+    return this.engine.UTF16ToString(ptr, maxBytesToRead);
   }
 
   getValue(ptr: number, type: Emscripten.CType) {
@@ -93,6 +97,14 @@ export class Runtime {
   pageLabel = this.wasm.FPDF_GetPageLabel;
   pageWidth = this.wasm.FPDF_GetPageWidthF;
   pageHeight = this.wasm.FPDF_GetPageHeightF;
+  renderPageBitmap = this.wasm.FPDF_RenderPageBitmap;
 
-  createEmptyBitmap = this.wasm.FPDFBitmap_CreateEx<BitmapFormat>;
+  createBitmap = this.wasm.FPDFBitmap_CreateEx<BitmapFormat>;
+  fillBitmap = this.wasm.FPDFBitmap_FillRect;
+  closeBitmap = this.wasm.FPDFBitmap_Destroy;
+
+  bitmapWidth = this.wasm.FPDFBitmap_GetWidth;
+  bitmapHeight = this.wasm.FPDFBitmap_GetHeight;
+  bitmapStride = this.wasm.FPDFBitmap_GetStride;
+  bitmapBuffer = this.wasm.FPDFBitmap_GetBuffer;
 }

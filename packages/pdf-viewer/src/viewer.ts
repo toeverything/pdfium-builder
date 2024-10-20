@@ -1,5 +1,6 @@
 import type { Runtime } from './runtime';
 import { Document } from './document';
+import { Bitmap } from './bitmap';
 
 export class Viewer {
   /**
@@ -55,5 +56,13 @@ export class Viewer {
    */
   close(docPtr: number) {
     this.runtime.closeDocument(docPtr);
+  }
+
+  /**
+   * Creates an empty bitmap.
+   */
+  createEmptyBitmap(width: number, height: number, format = Bitmap.format) {
+    const ptr = this.runtime.createBitmap(width, height, format);
+    return new Bitmap(this.runtime, ptr, format);
   }
 }

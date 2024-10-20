@@ -1,3 +1,4 @@
+import type { Bitmap } from './bitmap';
 import type { Document } from './document';
 
 export class Page {
@@ -69,5 +70,24 @@ export class Page {
     return { bottom: 0, left: 0, top: this.height(), right: this.width() };
   }
 
-  render() {}
+  render(
+    bitmap: Bitmap,
+    startX: number,
+    startY: number,
+    sizeX: number,
+    sizeY: number,
+    rotate: number,
+    flags: number
+  ) {
+    this.runtime.renderPageBitmap(
+      bitmap.pointer,
+      this.ptr,
+      startX,
+      startY,
+      sizeX,
+      sizeY,
+      rotate,
+      flags
+    );
+  }
 }

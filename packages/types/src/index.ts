@@ -19,7 +19,7 @@ export enum ErrorCode {
 }
 
 /**
- * PDFium BitmapFormat.
+ * PDFium Bitmap Format.
  * More DIB formats.
  */
 export enum BitmapFormat {
@@ -115,3 +115,5 @@ export enum PageMode {
   // Attachments panel visible.
   USEATTACHMENTS,
 }
+
+export const BYTES_PER_PIXEL = 4;

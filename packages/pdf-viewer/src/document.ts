@@ -1,6 +1,7 @@
 import {
   type FileIdentifier,
   type Metadata,
+  type MetaTag,
   MetaTags,
 } from '@toeverything/pdf-viewer-types';
 
@@ -39,6 +40,7 @@ export class Document {
     if (len) {
       this.#version = this.runtime.getValue(bufferPtr, 'i32');
     }
+    this.runtime.free(bufferPtr);
 
     return this.#version;
   }
@@ -53,7 +55,13 @@ export class Document {
     if (!len0) return str;
 
     const bufferPtr = this.runtime.malloc(len0);
-    str = this.runtime.UTF16ToString(bufferPtr);
+    const len1 = this.runtime.fileIdentifier(this.ptr, idType, bufferPtr, len0);
+    if (len0 !== len1) {
+      this.runtime.free(bufferPtr);
+      return str;
+    }
+
+    str = this.runtime.UTF16ToString(bufferPtr, len1);
 
     this.runtime.free(bufferPtr);
 
@@ -64,35 +72,26 @@ export class Document {
    * Gets metadata.
    */
   metadata(): Metadata {
-    const map = new Map();
-
-    for (const key of MetaTags) {
+    const arr = MetaTags.map(key => {
       const tagPtr = this.runtime.stringToNewUTF8(key);
-      if (!tagPtr) continue;
+      if (!tagPtr) return { meta: [key, ''], ptrs: [tagPtr, 0] };
 
       const len0 = this.runtime.metaText(this.ptr, tagPtr);
-      if (!len0) {
-        this.runtime.free(tagPtr);
-        continue;
-      }
+      if (!len0) return { meta: [key, ''], ptrs: [tagPtr, 0] };
 
       const bufferPtr = this.runtime.malloc(len0);
       const len1 = this.runtime.metaText(this.ptr, tagPtr, bufferPtr, len0);
-      if (len0 !== len1) {
-        this.runtime.free(tagPtr);
-        this.runtime.free(bufferPtr);
-        continue;
-      }
+      if (len0 !== len1) return { meta: [key, ''], ptrs: [tagPtr, bufferPtr] };
 
-      const value = this.runtime.UTF16ToString(bufferPtr);
+      const value = this.runtime.UTF16ToString(bufferPtr, len1);
+      return { meta: [key, value], ptrs: [tagPtr, bufferPtr] };
+    }).map(({ meta, ptrs: [tagPtr, bufferPtr] }) => {
+      tagPtr && this.runtime.free(tagPtr);
+      bufferPtr && this.runtime.free(bufferPtr);
+      return meta;
+    }) as [MetaTag, string][];
 
-      this.runtime.free(tagPtr);
-      this.runtime.free(bufferPtr);
-
-      map.set(key, value);
-    }
-
-    return map;
+    return new Map(arr);
   }
 
   /**

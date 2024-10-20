@@ -69,8 +69,8 @@ export interface FPDF_Bindings {
     width: number,
     height: number,
     format: T,
-    firstScan: number,
-    stride: number
+    firstScan?: number,
+    stride?: number
   ): number;
   FPDFBitmap_FillRect(
     bitmapPtr: number,
@@ -123,10 +123,11 @@ export interface PDFiumModule extends EmscriptenModule {
   ccall: typeof ccall;
   cwrap: typeof cwrap;
   stringToUTF8: typeof stringToUTF8;
-  lengthBytesUTF8: typeof lengthBytesUTF8;
-  UTF16ToString: typeof UTF16ToString;
-  getValue: typeof getValue;
   stringToNewUTF8: (str: string) => number;
+  lengthBytesUTF8: typeof lengthBytesUTF8;
+  UTF8ToString: (ptr: number, maxBytesToRead?: number) => string;
+  UTF16ToString: (ptr: number, maxBytesToRead?: number) => string;
+  getValue: typeof getValue;
 }
 
 /**

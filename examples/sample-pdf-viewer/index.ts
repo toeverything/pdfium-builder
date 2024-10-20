@@ -1,4 +1,9 @@
-import { createPDFium, Viewer, Runtime } from '@toeverything/pdf-viewer';
+import {
+  createPDFium,
+  Viewer,
+  Runtime,
+  Bitmap,
+} from '@toeverything/pdf-viewer';
 import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
 
 async function run() {
@@ -42,33 +47,25 @@ async function run() {
 
   const bitmapHeapPtr = runtime.malloc(bitmapHeapLength);
   runtime.HEAPU8.fill(0, bitmapHeapPtr, bitmapHeapPtr + bitmapHeapLength);
-  const bitmapPtr = runtime.wasm.FPDFBitmap_CreateEx(
+
+  const bitmapPtr = runtime.createBitmap(
     width,
     height,
     format,
     bitmapHeapPtr,
     width * bytesPerPixel
   );
-  runtime.wasm.FPDFBitmap_FillRect(bitmapPtr, 0, 0, width, height, 0xffffffff);
-  runtime.wasm.FPDF_RenderPageBitmap(
-    bitmapPtr,
-    page.pointer,
-    0,
-    0,
-    width,
-    height,
-    0,
-    0x10 | 0x01
-  );
 
-  runtime.wasm.FPDFBitmap_Destroy(bitmapPtr);
+  const bitmap = new Bitmap(runtime, bitmapPtr);
+  bitmap.fill(0, 0, width, height);
+  page.render(bitmap, 0, 0, width, height, 0, 0x10 | 0x01);
 
   const data = runtime.HEAPU8.subarray(
     bitmapHeapPtr,
     bitmapHeapPtr + bitmapHeapLength
   );
-  runtime.free(bitmapHeapPtr);
 
+  bitmap.close();
   page.close();
   doc.close();
 

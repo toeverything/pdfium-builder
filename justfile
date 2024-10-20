@@ -175,7 +175,9 @@ list-runtime-methods:
     stringToUTF8 \
     stringToNewUTF8 \
     lengthBytesUTF8 \
+    UTF8ToString \
     UTF16ToString \
+    intArrayToString \
     getValue
 
 [group('wasm')]
