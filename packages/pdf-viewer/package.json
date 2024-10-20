@@ -5,6 +5,18 @@
   "author": "toeverything",
   "license": "MPL-2.0",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@toeverything/pdf-viewer-types": "workspace:*",
     "@toeverything/pdfium": "workspace:*"

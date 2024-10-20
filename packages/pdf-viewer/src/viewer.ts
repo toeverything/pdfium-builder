@@ -1,33 +1,14 @@
-import { ErrorCode } from '@toeverything/pdf-viewer-types';
-import { type PDFiumModule } from '@toeverything/pdfium';
+import type { Runtime } from './runtime';
 import { Document } from './document';
 
 export class Viewer {
-  #engine: PDFiumModule;
-
-  constructor(engine: PDFiumModule) {
-    this.#engine = engine;
-  }
-
   /**
-   * Gets PDFium bindings.
+   * Gets PDFium runtime instance.
    */
-  get #bindings() {
-    return this.#engine.wasmExports;
-  }
+  runtime: Runtime;
 
-  /**
-   * Gets last error code when a function fails.
-   */
-  lastErrorCode() {
-    return this.#bindings.FPDF_GetLastError<ErrorCode>();
-  }
-
-  copyBytesToPDFium(bytes: Uint8Array) {
-    const size = bytes.length;
-    const bytesPtr = this.#bindings.malloc(size);
-    this.#engine.HEAPU8.set(bytes, bytesPtr);
-    return bytesPtr;
+  constructor(runtime: Runtime) {
+    this.runtime = runtime;
   }
 
   /**
@@ -35,35 +16,30 @@ export class Viewer {
    */
   open(bytes: Uint8Array, password?: string) {
     const size = bytes.length;
-    const bytesPtr = this.copyBytesToPDFium(bytes);
+    const bytesPtr = this.runtime.copyBytesTo(bytes);
 
     let passwordPtr = 0;
-    const passwordLength = password?.length ?? 0;
-    if (passwordLength) {
-      passwordPtr = this.#bindings.malloc(passwordLength);
-      this.#engine.stringToUTF8(password!, passwordPtr, passwordLength + 1);
+    if (password?.length) {
+      passwordPtr = this.runtime.stringToNewUTF8(password);
     }
 
-    const docPtr = this.#bindings.FPDF_LoadMemDocument64(
-      bytesPtr,
-      size,
-      passwordPtr
-    );
+    const docPtr = this.runtime.openDocument(bytesPtr, size, passwordPtr);
 
-    if (passwordLength) {
-      this.#bindings.free(passwordPtr);
+    if (passwordPtr) {
+      this.runtime.free(passwordPtr);
     }
 
     if (!docPtr) {
-      const code = this.lastErrorCode();
+      const code = this.runtime.lastErrorCode();
       if (!code) {
-        this.#bindings.free(docPtr);
+        this.runtime.free(docPtr);
         console.error(code);
       }
+      console.error(`Document loading failed`);
       return;
     }
 
-    return new Document(this.#engine, docPtr);
+    return new Document(this.runtime, docPtr);
   }
 
   /**
@@ -78,7 +54,6 @@ export class Viewer {
    * Closes a PDF document.
    */
   close(docPtr: number) {
-    this.#bindings.FPDF_CloseDocument(docPtr);
-    this.#bindings.free(docPtr);
+    this.runtime.closeDocument(docPtr);
   }
 }

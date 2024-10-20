@@ -1,24 +1,125 @@
-import { type PDFiumModule } from '@toeverything/pdfium';
+import {
+  type FileIdentifier,
+  type Metadata,
+  MetaTags,
+} from '@toeverything/pdf-viewer-types';
+
+import type { Runtime } from './runtime';
+import { Page } from './page';
 
 export class Document {
-  #engine: PDFiumModule;
+  #version = 0;
 
   constructor(
-    engine: PDFiumModule,
-    public ptr: number
-  ) {
-    this.#engine = engine;
+    public runtime: Runtime,
+    private ptr: number
+  ) {}
+
+  get pointer() {
+    return this.ptr;
   }
 
   /**
-   * Gets PDFium bindings.
+   * Closes current document.
    */
-  get #bindings() {
-    return this.#engine.wasmExports;
+  close() {
+    if (!this.ptr) return;
+    this.runtime.closeDocument(this.ptr);
+    this.ptr = 0;
   }
 
-  destroy() {
-    this.#bindings.FPDF_CloseDocument(this.ptr);
-    this.#bindings.free(this.ptr);
+  /**
+   * Gets PDF version.
+   */
+  version() {
+    if (this.#version) return this.#version;
+
+    const bufferPtr = this.runtime.malloc(4);
+    const len = this.runtime.version(this.ptr, bufferPtr);
+    if (len) {
+      this.#version = this.runtime.getValue(bufferPtr, 'i32');
+    }
+
+    return this.#version;
+  }
+
+  /**
+   * Gets file identifier by id.
+   */
+  fileIdentifier(idType: FileIdentifier) {
+    let str = '';
+
+    const len0 = this.runtime.fileIdentifier(this.ptr, idType);
+    if (!len0) return str;
+
+    const bufferPtr = this.runtime.malloc(len0);
+    str = this.runtime.UTF16ToString(bufferPtr);
+
+    this.runtime.free(bufferPtr);
+
+    return str;
+  }
+
+  /**
+   * Gets metadata.
+   */
+  metadata(): Metadata {
+    const map = new Map();
+
+    for (const key of MetaTags) {
+      const tagPtr = this.runtime.stringToNewUTF8(key);
+      if (!tagPtr) continue;
+
+      const len0 = this.runtime.metaText(this.ptr, tagPtr);
+      if (!len0) {
+        this.runtime.free(tagPtr);
+        continue;
+      }
+
+      const bufferPtr = this.runtime.malloc(len0);
+      const len1 = this.runtime.metaText(this.ptr, tagPtr, bufferPtr, len0);
+      if (len0 !== len1) {
+        this.runtime.free(tagPtr);
+        this.runtime.free(bufferPtr);
+        continue;
+      }
+
+      const value = this.runtime.UTF16ToString(bufferPtr);
+
+      this.runtime.free(tagPtr);
+      this.runtime.free(bufferPtr);
+
+      map.set(key, value);
+    }
+
+    return map;
+  }
+
+  /**
+   * Gets this document's page mode.
+   */
+  pageMode() {
+    return this.runtime.pageMode(this.ptr);
+  }
+
+  /**
+   * Gets total number of pages in the document.
+   */
+  pageCount() {
+    return this.runtime.pageCount(this.ptr);
+  }
+
+  /**
+   * Gets a page by index.
+   */
+  page(at: number) {
+    const pagePtr = this.runtime.loadPage(this.ptr, at);
+
+    if (!pagePtr) {
+      console.error(`Page ${at} not found`);
+      return;
+    }
+
+    return new Page(this, at, pagePtr);
   }
 }

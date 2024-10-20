@@ -20,17 +20,23 @@ export enum ErrorCode {
 
 /**
  * PDFium BitmapFormat.
+ * More DIB formats.
  */
 export enum BitmapFormat {
+  // Unknown or unsupported format.
   Unknown = 0,
-  BGRA,
-  BRGx,
-  BGRx,
+  // Gray scale bitmap, one byte per pixel.
+  Gray,
+  // 3 bytes per pixel, byte order: blue, green, red.
   BGR,
+  // 4 bytes per pixel, byte order: blue, green, red, unused.
+  BGRx,
+  // 4 bytes per pixel, byte order: blue, green, red, alpha. By default.
+  BGRA,
 }
 
 /**
- * Metadata Tags.
+ * Metadata Tag.
  */
 export enum MetaTag {
   Title = 'Title',
@@ -42,6 +48,12 @@ export enum MetaTag {
   CreationDate = 'CreationDate',
   ModificationDate = 'ModificationDate',
 }
+export const MetaTags = Object.values(MetaTag);
+
+/**
+ * Metadata.
+ */
+export type Metadata = Map<MetaTag, string>;
 
 /**
  * Page rendering flags. They can be combined with bit-wise OR.
@@ -80,4 +92,26 @@ export enum PageRenderingflags {
   // FPDF_COLORSCHEME is passed in, since with a single fill color for paths the
   // boundaries of adjacent fill paths are less visible.
   CONVERT_FILL_TO_STROKE = 0x20,
+}
+
+export enum FileIdentifier {
+  Permanent = 0,
+  Changing,
+}
+
+export enum PageMode {
+  // Unknown page mode.
+  UNKNOWN = -1,
+  // Document outline, and thumbnails hidden.
+  USENONE,
+  // Document outline visible.
+  USEOUTLINES,
+  // Thumbnail images visible.
+  USETHUMBS,
+  // Full-screen mode, no menu bar, window controls, or other decorations visible.
+  FULLSCREEN,
+  // Optional content group panel visible.
+  USEOC,
+  // Attachments panel visible.
+  USEATTACHMENTS,
 }

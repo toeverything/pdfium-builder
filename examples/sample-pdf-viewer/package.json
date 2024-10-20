@@ -1,0 +1,14 @@
+{
+  "name": "sample-pdf-viewer",
+  "private": true,
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@toeverything/pdf-viewer": "workspace:*",
+    "@toeverything/resources": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^5.4.9"
+  }
+}

@@ -2,8 +2,10 @@
   "name": "pdfium-builder",
   "private": true,
   "workspaces": [
+    "crates/pdf-viewer-napi",
     "packages/*",
     "examples/sample",
+    "examples/sample-pdf-viewer",
     "examples/sample-wasm-bindgen"
   ],
   "scripts": {

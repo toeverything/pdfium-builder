@@ -142,7 +142,7 @@ build-wasm name='createPDFium' esm='1' flag=(if debug == "true" {"-g"} else {"-O
     -s EXPORTED_RUNTIME_METHODS=[`just list-runtime-methods | sed 's/ /,/g'`] \
     -s EXPORT_ES6={{esm}} \
     -s EXPORT_NAME={{name}} \
-    -s DEMANGLE_SUPPORT=1 \
+    -s DEMANGLE_SUPPORT=0 \
     -s USE_ZLIB=1 \
     -s USE_LIBJPEG=1 \
     -s ASSERTIONS=1 \
@@ -173,8 +173,10 @@ list-runtime-methods:
     cwrap \
     wasmExports \
     stringToUTF8 \
+    stringToNewUTF8 \
     lengthBytesUTF8 \
-    UTF16ToString
+    UTF16ToString \
+    getValue
 
 [group('wasm')]
 install-wasm:

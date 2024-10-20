@@ -17,20 +17,26 @@ export interface FPDF_Bindings {
 
   FPDF_GetLastError<T extends number>(): T;
 
-  // Returns document pointer
+  // Returns document pointer.
   FPDF_LoadMemDocument(
     bytesPtr: number,
     size: number,
     passwordPtr: number
   ): number;
-  // Returns document pointer
+  // Returns document pointer.
   FPDF_LoadMemDocument64(
     bytesPtr: number,
     size: number,
     passwordPtr: number
   ): number;
   FPDF_GetPageCount(docPtr: number): number;
-  FPDF_GetFileVersion(docPtr: number, version: number): boolean;
+  FPDF_GetFileVersion(docPtr: number, versionPtr: number): number;
+  FPDF_GetFileIdentifier<T extends number>(
+    docPtr: number,
+    idType: T,
+    bytesPtr?: number,
+    size?: number
+  ): number;
   FPDF_GetPageSizeByIndexF(
     docPtr: numbern,
     pageIdx: number,
@@ -48,9 +54,10 @@ export interface FPDF_Bindings {
     bytesPtr?: number,
     size?: number
   ): number;
+  FPDFDoc_GetPageMode<T extends number>(docPtr: number): T;
   FPDF_CloseDocument(docPtr: number): void;
 
-  // Returns page pointer
+  // Returns page pointer.
   FPDF_LoadPage(docPtr: number, pageIdx: number): number;
   FPDF_GetPageWidthF(pagePtr: number): number;
   FPDF_GetPageHeightF(pagePtr: number): number;
@@ -58,7 +65,7 @@ export interface FPDF_Bindings {
   FPDF_ClosePage(pagePtr: number): void;
 
   FPDFBitmap_Create(width: number, height: number, alpha: number): number;
-  FPDFBitmap_CreateEx<T>(
+  FPDFBitmap_CreateEx<T extends number>(
     width: number,
     height: number,
     format: T,
@@ -74,7 +81,7 @@ export interface FPDF_Bindings {
     color: number
   ): number;
   FPDFBitmap_GetFormat<T extends number>(bitmapPtr: number): T;
-  // Returns buffer pointer
+  // Returns buffer pointer.
   FPDFBitmap_GetBuffer(bitmapPtr: number): number;
   FPDFBitmap_GetWidth(bitmapPtr: number): number;
   FPDFBitmap_GetHeight(bitmapPtr: number): number;
@@ -118,10 +125,12 @@ export interface PDFiumModule extends EmscriptenModule {
   stringToUTF8: typeof stringToUTF8;
   lengthBytesUTF8: typeof lengthBytesUTF8;
   UTF16ToString: typeof UTF16ToString;
+  getValue: typeof getValue;
+  stringToNewUTF8: (str: string) => number;
 }
 
 /**
- * Factory of PDFiumModule.
+ * Factory of PDFium module.
  */
 export default function createPDFium(
   moduleOverrides?: Partial<PDFiumModule>
