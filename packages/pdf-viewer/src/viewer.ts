@@ -61,8 +61,28 @@ export class Viewer {
   /**
    * Creates an empty bitmap.
    */
-  createEmptyBitmap(width: number, height: number, format = Bitmap.format) {
-    const ptr = this.runtime.createBitmap(width, height, format);
+  createBitmap(width: number, height: number, alpha: number) {
+    const ptr = this.runtime.createBitmap(width, height, alpha);
+    return new Bitmap(this.runtime, ptr);
+  }
+
+  /**
+   * Creates a bitmap with params.
+   */
+  createBitmapWith(
+    width: number,
+    height: number,
+    format = Bitmap.format,
+    firstScan?: number,
+    stride?: number
+  ) {
+    const ptr = this.runtime.createBitmapWith(
+      width,
+      height,
+      format,
+      firstScan,
+      stride
+    );
     return new Bitmap(this.runtime, ptr, format);
   }
 }

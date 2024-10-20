@@ -33,10 +33,11 @@ export class Bitmap {
     const stride = this.runtime.bitmapStride(this.ptr);
     const height = this.runtime.bitmapHeight(this.ptr);
     const bufferPtr = this.runtime.bitmapBuffer(this.ptr);
-
-    return this.runtime.HEAPU8.subarray(
+    const buffer = this.runtime.HEAPU8.subarray(
       bufferPtr,
-      stride * height * BYTES_PER_PIXEL
+      bufferPtr + stride * height
     );
+    this.runtime.free(bufferPtr);
+    return buffer;
   }
 }

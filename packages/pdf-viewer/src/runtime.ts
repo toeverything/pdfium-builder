@@ -99,7 +99,8 @@ export class Runtime {
   pageHeight = this.wasm.FPDF_GetPageHeightF;
   renderPageBitmap = this.wasm.FPDF_RenderPageBitmap;
 
-  createBitmap = this.wasm.FPDFBitmap_CreateEx<BitmapFormat>;
+  createBitmap = this.wasm.FPDFBitmap_Create;
+  createBitmapWith = this.wasm.FPDFBitmap_CreateEx<BitmapFormat>;
   fillBitmap = this.wasm.FPDFBitmap_FillRect;
   closeBitmap = this.wasm.FPDFBitmap_Destroy;
 

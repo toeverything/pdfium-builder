@@ -3,6 +3,7 @@ import {
   Viewer,
   Runtime,
   Bitmap,
+  PageRenderingflags,
 } from '@toeverything/pdf-viewer';
 import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
 
@@ -39,31 +40,18 @@ async function run() {
   const originalHeight = page.height();
 
   const scale = 2;
-  const format = 4;
-  const bytesPerPixel = 4;
   const width = Math.ceil(originalWidth * scale);
   const height = Math.ceil(originalHeight * scale);
-  const bitmapHeapLength = width * height * bytesPerPixel;
 
-  const bitmapHeapPtr = runtime.malloc(bitmapHeapLength);
-  runtime.HEAPU8.fill(0, bitmapHeapPtr, bitmapHeapPtr + bitmapHeapLength);
+  const bitmapPtr = runtime.createBitmap(width, height, 0);
 
-  const bitmapPtr = runtime.createBitmap(
-    width,
-    height,
-    format,
-    bitmapHeapPtr,
-    width * bytesPerPixel
-  );
-
+  const flags =
+    PageRenderingflags.REVERSE_BYTE_ORDER | PageRenderingflags.LCD_TEXT;
   const bitmap = new Bitmap(runtime, bitmapPtr);
   bitmap.fill(0, 0, width, height);
-  page.render(bitmap, 0, 0, width, height, 0, 0x10 | 0x01);
+  page.render(bitmap, 0, 0, width, height, 0, flags);
 
-  const data = runtime.HEAPU8.subarray(
-    bitmapHeapPtr,
-    bitmapHeapPtr + bitmapHeapLength
-  );
+  const data = bitmap.toBytes();
 
   bitmap.close();
   page.close();
