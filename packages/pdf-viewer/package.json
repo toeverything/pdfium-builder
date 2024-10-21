@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "vitest --run --dom",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui --dom"
   },
   "dependencies": {
     "@toeverything/pdf-viewer-types": "workspace:*",
