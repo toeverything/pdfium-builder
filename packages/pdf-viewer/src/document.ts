@@ -1,7 +1,7 @@
 import {
   type FileIdentifier,
-  type Metadata,
   type MetaTag,
+  type Metadata,
   MetaTags,
 } from '@toeverything/pdf-viewer-types';
 

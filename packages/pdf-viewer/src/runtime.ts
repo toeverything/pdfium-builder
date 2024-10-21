@@ -1,9 +1,10 @@
 import type { FPDF_Config, PDFiumModule } from '@toeverything/pdfium';
 import type {
-  BitmapFormat,
   ErrorCode,
+  BitmapFormat,
   FileIdentifier,
   PageMode,
+  Rotation,
 } from '@toeverything/pdf-viewer-types';
 
 export const DefaultConfig: FPDF_Config = {
@@ -97,6 +98,7 @@ export class Runtime {
   pageLabel = this.wasm.FPDF_GetPageLabel;
   pageWidth = this.wasm.FPDF_GetPageWidthF;
   pageHeight = this.wasm.FPDF_GetPageHeightF;
+  pageRotation = this.wasm.FPDFPage_GetRotation<Rotation>;
   renderPageBitmap = this.wasm.FPDF_RenderPageBitmap;
 
   createBitmap = this.wasm.FPDFBitmap_Create;

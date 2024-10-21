@@ -117,3 +117,14 @@ export enum PageMode {
 }
 
 export const BYTES_PER_PIXEL = 4;
+
+export const enum Rotation {
+  // No rotation
+  Zero = 0,
+  // 90 degrees
+  Quarter,
+  // 180 degrees
+  Half,
+  // 270 degrees
+  ThreeQuarters,
+}

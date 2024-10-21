@@ -32,6 +32,7 @@ async function run() {
   console.log(page.label());
   console.log(page.width());
   console.log(page.height());
+  console.log(page.rotation());
 
   page.close();
   page.reload();

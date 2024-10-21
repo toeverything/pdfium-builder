@@ -66,6 +66,10 @@ export class Page {
     return this.runtime.pageHeight(this.ptr);
   }
 
+  rotation() {
+    return this.runtime.pageRotation(this.ptr);
+  }
+
   rect() {
     return { bottom: 0, left: 0, top: this.height(), right: this.width() };
   }
