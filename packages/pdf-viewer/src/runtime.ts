@@ -102,6 +102,7 @@ export class Runtime {
   pageWidth = this.wasm.FPDF_GetPageWidthF;
   pageHeight = this.wasm.FPDF_GetPageHeightF;
   pageRotation = this.wasm.FPDFPage_GetRotation<Rotation>;
+  pageTransparency = this.wasm.FPDFPage_HasTransparency;
   renderPageBitmap = this.wasm.FPDF_RenderPageBitmap;
 
   createBitmap = this.wasm.FPDFBitmap_Create;

@@ -68,6 +68,10 @@ export class Page {
     return this.runtime.pageRotation(this.ptr);
   }
 
+  hasTransparency() {
+    return !!this.runtime.pageTransparency(this.ptr);
+  }
+
   rect() {
     return { bottom: 0, left: 0, top: this.height(), right: this.width() };
   }

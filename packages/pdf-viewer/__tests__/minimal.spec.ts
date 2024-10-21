@@ -33,18 +33,24 @@ test('pdf lorem ipsum', async () => {
   expect(page.height()).toBeCloseTo(842, 0.1);
 
   page.close();
+  expect(page.pointer).toBe(0);
 
   expect(page.width()).toBe(0);
   expect(page.height()).toBe(0);
+  expect(page.rotation()).toBe(-1);
+  expect(page.hasTransparency()).toBe(false);
 
   page.reload();
+  expect(page.pointer).gt(0);
 
   expect(page.width()).toBeCloseTo(595, 0.1);
   expect(page.height()).toBeCloseTo(842, 0.1);
+  expect(page.rotation()).toBe(0);
+  expect(page.hasTransparency()).toBe(false);
 
   page.close();
+  expect(page.pointer).toBe(0);
 
   doc.close();
-
   expect(doc.pointer).toBe(0);
 });
