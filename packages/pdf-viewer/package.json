@@ -17,8 +17,18 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "test": "vitest --run --dom",
+    "test:ui": "vitest --ui"
+  },
   "dependencies": {
     "@toeverything/pdf-viewer-types": "workspace:*",
     "@toeverything/pdfium": "workspace:*"
+  },
+  "devDependencies": {
+    "@toeverything/resources": "workspace:*",
+    "@vitest/ui": "2.1.3",
+    "happy-dom": "^15.7.4",
+    "vitest": "^2.1.3"
   }
 }

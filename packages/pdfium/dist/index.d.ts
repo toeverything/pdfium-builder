@@ -62,7 +62,7 @@ export interface FPDF_Bindings {
   FPDF_GetPageWidthF(pagePtr: number): number;
   FPDF_GetPageHeightF(pagePtr: number): number;
   FPDF_GetPageBoundingBox(pagePtr: number, bytesPtr: number): boolean;
-  FPDFPage_GetRotation<T>(pagePtr: number): T;
+  FPDFPage_GetRotation<T extends number>(pagePtr: number): T;
   FPDF_ClosePage(pagePtr: number): void;
 
   FPDFBitmap_Create(width: number, height: number, alpha: number): number;

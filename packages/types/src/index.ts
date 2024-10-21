@@ -31,7 +31,7 @@ export enum BitmapFormat {
   BGR,
   // 4 bytes per pixel, byte order: blue, green, red, unused.
   BGRx,
-  // 4 bytes per pixel, byte order: blue, green, red, alpha. By default.
+  // 4 bytes per pixel, byte order: blue, green, red, alpha.
   BGRA,
 }
 

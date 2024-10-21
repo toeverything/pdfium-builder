@@ -37,9 +37,7 @@ export class Page {
     let str = '';
 
     const len0 = this.runtime.pageLabel(this.doc.pointer, this.index);
-    if (!len0) {
-      return str;
-    }
+    if (!len0) return str;
 
     const bufferPtr = this.runtime.malloc(len0);
     const len1 = this.runtime.pageLabel(

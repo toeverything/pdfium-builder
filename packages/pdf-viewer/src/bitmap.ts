@@ -1,4 +1,4 @@
-import { BitmapFormat, BYTES_PER_PIXEL } from '@toeverything/pdf-viewer-types';
+import { BitmapFormat } from '@toeverything/pdf-viewer-types';
 import type { Runtime } from './runtime';
 
 export class Bitmap {
@@ -6,7 +6,7 @@ export class Bitmap {
 
   constructor(
     public runtime: Runtime,
-    public ptr: number,
+    private ptr: number,
     public format = Bitmap.format
   ) {}
 
@@ -15,8 +15,10 @@ export class Bitmap {
   }
 
   close() {
+    if (!this.ptr) return;
     this.runtime.closeBitmap(this.ptr);
     this.runtime.free(this.ptr);
+    this.ptr = 0;
   }
 
   fill(
@@ -24,7 +26,7 @@ export class Bitmap {
     top: number,
     width: number,
     height: number,
-    color = 0xffffffff //32 bit
+    color = 0xffffffff // 32 bit
   ) {
     return this.runtime.fillBitmap(this.ptr, left, top, width, height, color);
   }

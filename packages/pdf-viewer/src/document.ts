@@ -37,9 +37,8 @@ export class Document {
 
     const bufferPtr = this.runtime.malloc(4);
     const len = this.runtime.version(this.ptr, bufferPtr);
-    if (len) {
-      this.#version = this.runtime.getValue(bufferPtr, 'i32');
-    }
+    if (len) this.#version = this.runtime.getValue(bufferPtr, 'i32');
+
     this.runtime.free(bufferPtr);
 
     return this.#version;

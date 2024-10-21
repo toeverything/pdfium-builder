@@ -26,13 +26,13 @@
   "files": [],
   "references": [
     {
-      "path": "./packages/pdfium",
+      "path": "./packages/pdfium"
     },
     {
-      "path": "./packages/types",
+      "path": "./packages/types"
     },
     {
-      "path": "./packages/pdf-viewer",
+      "path": "./packages/pdf-viewer"
     }
   ],
   "ts-node": {

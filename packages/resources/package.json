@@ -8,5 +8,8 @@
   "type": "module",
   "files": [
     "*.pdf"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

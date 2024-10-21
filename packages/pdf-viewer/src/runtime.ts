@@ -15,6 +15,9 @@ export const DefaultConfig: FPDF_Config = {
   m_v8EmbedderSlot: 0,
 };
 
+/**
+ * PDFium runtime.
+ */
 export class Runtime {
   constructor(public engine: PDFiumModule) {
     this.init(DefaultConfig);

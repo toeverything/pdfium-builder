@@ -3,14 +3,7 @@ import { Document } from './document';
 import { Bitmap } from './bitmap';
 
 export class Viewer {
-  /**
-   * Gets PDFium runtime instance.
-   */
-  runtime: Runtime;
-
-  constructor(runtime: Runtime) {
-    this.runtime = runtime;
-  }
+  constructor(public runtime: Runtime) {}
 
   /**
    * Opens and load a PDF document from memory.
@@ -31,12 +24,13 @@ export class Viewer {
     }
 
     if (!docPtr) {
+      let msg = 'Document loading failed';
       const code = this.runtime.lastErrorCode();
       if (!code) {
         this.runtime.free(docPtr);
-        console.error(code);
+        msg += ` ${code}`;
       }
-      console.error(`Document loading failed`);
+      console.error(msg);
       return;
     }
 

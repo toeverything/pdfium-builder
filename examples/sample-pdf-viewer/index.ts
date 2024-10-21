@@ -2,7 +2,6 @@ import {
   createPDFium,
   Viewer,
   Runtime,
-  Bitmap,
   PageRenderingflags,
 } from '@toeverything/pdf-viewer';
 import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
@@ -13,10 +12,8 @@ async function run() {
   const viewer = new Viewer(runtime);
 
   const req = await fetch(minimalPDFUrl);
-  const buffer = await req.arrayBuffer();
-  const bytes = new Uint8Array(buffer);
-
-  const doc = viewer.open(bytes);
+  const blob = await req.blob();
+  const doc = await viewer.openWithBlob(blob);
   if (!doc) return;
 
   console.log(doc.pageMode());
@@ -44,11 +41,9 @@ async function run() {
   const width = Math.ceil(originalWidth * scale);
   const height = Math.ceil(originalHeight * scale);
 
-  const bitmapPtr = runtime.createBitmap(width, height, 0);
-
   const flags =
     PageRenderingflags.REVERSE_BYTE_ORDER | PageRenderingflags.LCD_TEXT;
-  const bitmap = new Bitmap(runtime, bitmapPtr);
+  const bitmap = viewer.createBitmap(width, height, 0);
   bitmap.fill(0, 0, width, height);
   page.render(bitmap, 0, 0, width, height, 0, flags);
 
