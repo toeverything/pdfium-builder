@@ -59,6 +59,10 @@ export class Runtime {
     return this.engine.getValue(ptr, type);
   }
 
+  setValue(ptr: number, value: any, type: Emscripten.CType, noSafe?: boolean) {
+    return this.engine.setValue(ptr, value, type, noSafe);
+  }
+
   /**
    * Copys bytes to WASM.
    */
@@ -104,6 +108,9 @@ export class Runtime {
   pageRotation = this.wasm.FPDFPage_GetRotation<Rotation>;
   pageTransparency = this.wasm.FPDFPage_HasTransparency;
   renderPageBitmap = this.wasm.FPDF_RenderPageBitmap;
+
+  pointFromDeviceToPage = this.wasm.FPDF_DeviceToPage;
+  pointFromPageToDevice = this.wasm.FPDF_PageToDevice;
 
   createBitmap = this.wasm.FPDFBitmap_Create;
   createBitmapWith = this.wasm.FPDFBitmap_CreateEx<BitmapFormat>;

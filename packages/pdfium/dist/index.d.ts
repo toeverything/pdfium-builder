@@ -64,6 +64,31 @@ export interface FPDF_Bindings {
   FPDF_GetPageBoundingBox(pagePtr: number, bytesPtr: number): boolean;
   FPDFPage_GetRotation<T extends number>(pagePtr: number): T;
   FPDFPage_HasTransparency(pagePtr: number): number;
+  // Coordinates.
+  FPDF_DeviceToPage(
+    pagePtr: number,
+    startX: number,
+    startY: number,
+    sizeX: number,
+    sizeY: number,
+    rotate: number,
+    deviceX: number,
+    deviceY: number,
+    pageXPtr: number,
+    pageYPtr: number
+  );
+  FPDF_PageToDevice(
+    pagePtr: number,
+    startX: number,
+    startY: number,
+    sizeX: number,
+    sizeY: number,
+    rotate: number,
+    pageX: number,
+    pageY: number,
+    deviceXPtr: number,
+    deviceYPtr: number
+  );
   FPDF_ClosePage(pagePtr: number): void;
 
   FPDFBitmap_Create(width: number, height: number, alpha: number): number;
@@ -130,6 +155,7 @@ export interface PDFiumModule extends EmscriptenModule {
   UTF8ToString: (ptr: number, maxBytesToRead?: number) => string;
   UTF16ToString: (ptr: number, maxBytesToRead?: number) => string;
   getValue: typeof getValue;
+  setValue: typeof setValue;
 }
 
 /**

@@ -96,4 +96,66 @@ export class Page {
       flags
     );
   }
+
+  getPointFromDeviceToPage(deviceX: number, deviceY: number) {
+    const startX = 0;
+    const startY = 0;
+    const sizeX = this.width();
+    const sizeY = this.height();
+    const rotate = this.rotation();
+    const pageXPtr = this.runtime.malloc(4);
+    const pageYPtr = this.runtime.malloc(4);
+
+    this.runtime.pointFromDeviceToPage(
+      this.ptr,
+      startX,
+      startY,
+      sizeX,
+      sizeY,
+      rotate,
+      deviceX,
+      deviceY,
+      pageXPtr,
+      pageYPtr
+    );
+
+    const pageX = this.runtime.getValue(pageXPtr, 'i32');
+    const pageY = this.runtime.getValue(pageYPtr, 'i32');
+
+    this.runtime.free(pageXPtr);
+    this.runtime.free(pageYPtr);
+
+    return [pageX, pageY];
+  }
+
+  getPointFromPageToDevice(pageX: number, pageY: number) {
+    const startX = 0;
+    const startY = 0;
+    const sizeX = this.width();
+    const sizeY = this.height();
+    const rotate = this.rotation();
+    const deviceXPtr = this.runtime.malloc(4);
+    const deviceYPtr = this.runtime.malloc(4);
+
+    this.runtime.pointFromPageToDevice(
+      this.ptr,
+      startX,
+      startY,
+      sizeX,
+      sizeY,
+      rotate,
+      pageX,
+      pageY,
+      deviceXPtr,
+      deviceYPtr
+    );
+
+    const deviceX = this.runtime.getValue(deviceXPtr, 'i32');
+    const deviceY = this.runtime.getValue(deviceYPtr, 'i32');
+
+    this.runtime.free(deviceXPtr);
+    this.runtime.free(deviceYPtr);
+
+    return [deviceX, deviceY];
+  }
 }
