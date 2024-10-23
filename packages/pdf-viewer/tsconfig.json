@@ -1,7 +1,18 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "outDir": "dist",
     "types": ["@types/emscripten"]
   },
-  "include": ["./dist"]
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../pdfium"
+    },
+    {
+      "path": "../types"
+    }
+  ]
 }

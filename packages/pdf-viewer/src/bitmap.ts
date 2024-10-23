@@ -1,5 +1,5 @@
 import { BitmapFormat } from '@toeverything/pdf-viewer-types';
-import type { Runtime } from './runtime';
+import type { Runtime } from './runtime.js';
 
 export class Bitmap {
   static format = BitmapFormat.BGRA;

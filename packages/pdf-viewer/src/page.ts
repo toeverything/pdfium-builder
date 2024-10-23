@@ -1,5 +1,5 @@
-import type { Bitmap } from './bitmap';
-import type { Document } from './document';
+import type { Bitmap } from './bitmap.js';
+import type { Document } from './document.js';
 
 export class Page {
   constructor(

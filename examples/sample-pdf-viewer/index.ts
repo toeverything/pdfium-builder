@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import {
   createPDFium,
   Viewer,

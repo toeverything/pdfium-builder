@@ -3,7 +3,6 @@
 import createPDFium from '@toeverything/pdfium';
 import wasmUrl from '@toeverything/pdfium/wasm?url';
 import minimalPDFUrl from '@toeverything/resources/minimal.pdf?url';
-import { MetaTag } from '@toeverything/pdf-viewer-types';
 import wasm_bindgen, * as bindings from './dist/sample_wasm_bindgen';
 
 async function run() {
@@ -24,18 +23,12 @@ async function run() {
   const req = await fetch(minimalPDFUrl);
   const buffer = await req.arrayBuffer();
   const bytes = new Uint8Array(buffer);
-  const size = bytes.length;
-  const password = '';
 
   const pdfviewer = await wasm_bindgen();
 
   console.log(bindings.initialize_pdfium_render(pdfium, pdfviewer, true, true));
 
-  console.log(pdfviewer, bindings);
-  console.dir(bindings.Viewer);
   const viewer = bindings.Viewer.new();
-  console.log(typeof viewer.close(), 11111111111);
-  console.log(233);
 
   const doc = viewer.open('0', bytes);
 

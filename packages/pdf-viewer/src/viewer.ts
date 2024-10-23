@@ -1,6 +1,6 @@
-import type { Runtime } from './runtime';
-import { Document } from './document';
-import { Bitmap } from './bitmap';
+import type { Runtime } from './runtime.js';
+import { Document } from './document.js';
+import { Bitmap } from './bitmap.js';
 
 export class Viewer {
   constructor(public runtime: Runtime) {}

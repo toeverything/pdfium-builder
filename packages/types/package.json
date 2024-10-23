@@ -1,21 +1,35 @@
 {
   "name": "@toeverything/pdf-viewer-types",
-  "description": "pdf-viewer types",
+  "description": "PDF Viewer types",
   "version": "0.1.0",
-  "private": true,
   "author": "toeverything",
   "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toeverything/pdfium-builder.git",
+    "directory": "packages/types"
+  },
   "type": "module",
+  "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./src/index.ts"
-    }
+    ".": "./src/index.ts"
   },
   "files": [
     "src",
     "dist"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc"
   }
 }

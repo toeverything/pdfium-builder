@@ -5,8 +5,8 @@ import {
   MetaTags,
 } from '@toeverything/pdf-viewer-types';
 
-import type { Runtime } from './runtime';
-import { Page } from './page';
+import type { Runtime } from './runtime.js';
+import { Page } from './page.js';
 
 export class Document {
   #version = 0;
