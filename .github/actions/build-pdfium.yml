@@ -1,4 +1,4 @@
-name: Build Action
+name: AFFiNE PDFium build'
 
 on:
   workflow_dispatch:
