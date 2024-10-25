@@ -1,7 +1,6 @@
 {
   "name": "pdfium-builder",
   "private": true,
-  "type": "commonjs",
   "packageManager": "yarn@4.5.0",
   "workspaces": [
     "crates/pdf-viewer-napi",

@@ -24,17 +24,17 @@ export class Viewer {
     }
 
     if (!docPtr) {
-      let msg = 'Document loading failed';
+      bytesPtr && this.runtime.free(bytesPtr);
+      docPtr && this.runtime.free(docPtr);
+
       const code = this.runtime.lastErrorCode();
-      if (!code) {
-        this.runtime.free(docPtr);
-        msg += ` ${code}`;
-      }
+      let msg = 'Document loading failed';
+      if (!code) msg += ` ${code}`;
       console.error(msg);
       return;
     }
 
-    return new Document(this.runtime, docPtr);
+    return new Document(this.runtime, docPtr, bytesPtr);
   }
 
   /**
@@ -43,13 +43,6 @@ export class Viewer {
   async openWithBlob(blob: Blob, password?: string) {
     const buffer = new Uint8Array(await blob.arrayBuffer());
     return this.open(buffer, password);
-  }
-
-  /**
-   * Closes a PDF document.
-   */
-  close(docPtr: number) {
-    this.runtime.closeDocument(docPtr);
   }
 
   /**
