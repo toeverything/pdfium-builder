@@ -52,7 +52,9 @@ jobs:
           debug: false
 
       - name: Build packages
-        run: yarn build:packages
+        run: |
+          yarn run test
+          yarn build:packages
 
       - name: Publish to NPM
         run: |
