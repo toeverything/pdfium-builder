@@ -9,6 +9,7 @@ runs:
       run: |
         echo "FORCE_COLOR=1" >> "${GITHUB_ENV}"
         echo "DO_NOT_TRACK=1" >> "${GITHUB_ENV}"
+        echo "YARN_ENABLE_IMMUTABLE_INSTALLS=false" >> "${GITHUB_ENV}"
 
     - name: Enable corepack
       run: corepack enable
