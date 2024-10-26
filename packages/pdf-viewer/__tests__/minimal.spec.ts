@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { readFile } from 'node:fs/promises';
 
 import wasmURL from '@toeverything/pdfium/wasm?url';
@@ -6,6 +8,8 @@ import minimalURL from '@toeverything/resources/minimal.pdf?url';
 import { assert, expect, test } from 'vitest';
 
 import { createPDFium, Runtime, Viewer } from '../src';
+
+// @vitest-environment happy-dom
 
 test('pdf minimal', async () => {
   const pdfium = await createPDFium({

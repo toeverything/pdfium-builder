@@ -1,9 +1,5 @@
-import {
-  type FileIdentifier,
-  type MetaTag,
-  type Metadata,
-  MetaTags,
-} from '@toeverything/pdf-viewer-types';
+import type { FileIdentifier, MetaTag, Metadata } from '@toeverything/pdf-viewer-types';
+import { MetaTags } from '@toeverything/pdf-viewer-types';
 
 import type { Runtime } from './runtime.js';
 import { Page } from './page.js';

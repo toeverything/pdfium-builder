@@ -10,6 +10,8 @@
     "examples/sample-wasm-bindgen"
   ],
   "scripts": {
+    "build:packages": "yarn workspace @toeverything/pdf-viewer build",
+    "build:packages:clean": "tsc --build --clean",
     "lint:prettier": "prettier --ignore-unknown --cache --check .",
     "lint:prettier:fix": "prettier --ignore-unknown --cache --write .",
     "prepare": "husky"

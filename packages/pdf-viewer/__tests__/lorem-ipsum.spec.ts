@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { readFile } from 'node:fs/promises';
 
 import wasmURL from '@toeverything/pdfium/wasm?url';
@@ -6,6 +8,8 @@ import loremIpsumURL from '@toeverything/resources/lorem-ipsum.pdf?url';
 import { assert, expect, test } from 'vitest';
 
 import { createPDFium, Runtime, Viewer } from '../src';
+
+// @vitest-environment happy-dom
 
 test('pdf lorem ipsum', async () => {
   const pdfium = await createPDFium({
