@@ -1,31 +1,47 @@
-name: Build
+name: AFFiNE PDFium build
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       # branch:
       #   description: PDFium branch
-      #   type: string
       #   required: false
       #   default: main
       version:
         description: PDFium version
-        type: string
         required: false
         default: '6666'
       target_os:
-        description: Target OS (android|ios|linux|mac|wasm|win)
-        type: string
-        required: true
+        description: Target OS
+        type: choice
+        default: mac
+        options:
+          - android
+          - ios
+          - linux
+          - mac
+          - win
+          - wasm
       target_cpu:
-        description: Target CPU (arm|arm64|x64|x86|wasm)
-        type: string
-        required: true
+        description: Target CPU
+        type: choice
+        default: arm64
+        options:
+          - arm
+          - arm64
+          - x64
+          - x86
+          - wasm
       target_environment:
-        description: Target environment (device|catalyst|simulator|musl)
-        type: string
-        required: false
+        description: Target environment
+        type: choice
         default: ''
+        options:
+          - ''
+          - device
+          - catalyst
+          - simulator
+          - musl
       static_lib:
         description: Static Library
         type: boolean
@@ -46,132 +62,18 @@ on:
         type: string
         required: false
         default: 3.1.69
-    outputs:
-      artifact:
-        description: 'The name of the artifact'
-        value: ${{ jobs.build.outputs.artifact }}
 
 jobs:
   build:
-    outputs:
-      artifact: ${{ steps.init.outputs.artifact }}
-    runs-on: ${{ (inputs.target_os == 'ios' || inputs.target_os == 'mac') && 'macos-latest' || inputs.target_os == 'win' && 'windows-2022' || 'ubuntu-22.04' }}
-    steps:
-      - name: Initialize
-        id: init
-        shell: bash
-        run: |
-          ARTIFACT="pdfium"
-          [ "${{ inputs.enable_v8 }}" == "true" ] && ARTIFACT="$ARTIFACT-v8"
-          ARTIFACT="$ARTIFACT-${{ inputs.target_os }}"
-          [ "${{ inputs.target_environment }}" != "" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_environment }}"
-          [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && ARTIFACT="$ARTIFACT-${{ inputs.target_cpu }}"
-          [ "${{ inputs.debug }}" == "true" ] && ARTIFACT="$ARTIFACT-debug"
-          echo "artifact=$ARTIFACT" >> $GITHUB_OUTPUT
-
-      - name: Checkout this repo
-        uses: actions/checkout@v4
-
-      - name: Install Linux dependencies
-        if: ${{ inputs.target_os == 'linux' }}
-        run: |
-          PKGS=""
-
-          if [ "${{ inputs.target_environment }}" == "musl" ]; then
-            case "${{ inputs.target_cpu }}" in
-            x86)
-              PKGS="g++-12 g++-12-multilib"
-              ;;
-
-            x64)
-              PKGS="g++-12"
-              ;;
-
-            arm)
-              PKGS="g++-12"
-              ;;
-
-            arm64)
-              PKGS="g++-12"
-              ;;
-            esac
-          else
-            case "${{ inputs.target_cpu }}" in
-            arm)
-              PKGS="libc6-i386 gcc-12-multilib g++-12-arm-linux-gnueabihf gcc-12-arm-linux-gnueabihf"
-              ;;
-
-            arm64)
-              PKGS="libc6-i386 gcc-12-multilib g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu"
-              ;;
-
-            x86)
-              PKGS="g++-12-multilib"
-              ;;
-
-            x64)
-              PKGS="g++-12"
-              ;;
-            esac
-          fi
-
-          sudo apt-get update
-          sudo apt-get install -y cmake pkg-config $PKGS
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
-
-      - name: Install Just
-        uses: extractions/setup-just@v2
-
-      - name: Install EMSDK
-        if: ${{ inputs.target_os == 'wasm' }}
-        uses: mymindstorm/setup-emsdk@v14
-        with:
-          version: ${{ inputs.emsdk_version }}
-
-      - name: Set environment variables
-        shell: bash
-        run: |
-          cat >> .env <<END
-          TARGET_OS = "${{ inputs.target_os }}"
-          TARGET_CPU = "${{ inputs.target_cpu }}"
-          STATIC_LIB = ${{ inputs.static_lib }}
-          DEBUG = ${{ inputs.debug }}
-          ENABLE_V8 = ${{ inputs.enable_v8 }}
-          PDFIUM_VERSION=${{ inputs.version }}
-          END
-
-          [ "${{ inputs.target_os }}" == "ios" ] && [ "${{ inputs.target_environment }}" != "" ] && echo "target_environment = \"${{ inputs.target_environment }}\"" >> .env
-          echo "${PWD}/depot_tools" >> $GITHUB_PATH
-
-      - name: Build
-        shell: bash
-        run: |
-          just -v build pack
-
-      - name: Build & Install WASM
-        if: ${{ inputs.target_os == 'wasm' }}
-        shell: bash
-        run: |
-          just -v build-wasm
-          just -v install-wasm
-
-
-      - name: Configure
-        run: |
-          target="${{ inputs.target_os }}"
-          [ "${{ inputs.target_os }}" != "${{ inputs.target_cpu }}" ] && target="$target-${{ inputs.target_cpu }}"
-
-          cat <<END >> $GITHUB_STEP_SUMMARY
-          ## ${target}'s args.gn
-
-          \`\`\`gn
-          $(cat pdfium/out/$target/args.gn)
-          \`\`\`
-          END
-        shell: bash
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.init.outputs.artifact }}
-          path: dist/
+    name: Build - ${{ github.event.inputs.target_os }} ${{ github.event.inputs.target_cpu }} ${{ github.event.inputs.target_environment }}
+    uses: ./.github/actions/build-pdfium.yml
+    with:
+      # branch: ${{ github.event.inputs.branch }}
+      version: ${{ github.event.inputs.version }}
+      target_os: ${{ github.event.inputs.target_os }}
+      target_cpu: ${{ github.event.inputs.target_cpu }}
+      target_environment: ${{ github.event.inputs.target_environment }}
+      enable_v8: ${{ github.event.inputs.enable_v8 == 'true' }}
+      emsdk_version: ${{ github.event.inputs.emsdk_version }}
+      static_lib: ${{ github.event.inputs.static_lib == 'true' }}
+      debug: ${{ github.event.inputs.debug == 'true' }}
