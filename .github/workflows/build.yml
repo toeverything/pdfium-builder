@@ -66,14 +66,18 @@ on:
 jobs:
   build:
     name: Build - ${{ github.event.inputs.target_os }} ${{ github.event.inputs.target_cpu }} ${{ github.event.inputs.target_environment }}
-    uses: ./.github/actions/build-pdfium.yml
-    with:
-      # branch: ${{ github.event.inputs.branch }}
-      version: ${{ github.event.inputs.version }}
-      target_os: ${{ github.event.inputs.target_os }}
-      target_cpu: ${{ github.event.inputs.target_cpu }}
-      target_environment: ${{ github.event.inputs.target_environment }}
-      enable_v8: ${{ github.event.inputs.enable_v8 == 'true' }}
-      emsdk_version: ${{ github.event.inputs.emsdk_version }}
-      static_lib: ${{ github.event.inputs.static_lib == 'true' }}
-      debug: ${{ github.event.inputs.debug == 'true' }}
+    outputs:
+      artifact: ${{ steps.init.outputs.artifact }}
+    runs-on: ${{ (github.event.inputs.target_os == 'ios' || github.event.inputs.target_os == 'mac') && 'macos-latest' || github.event.inputs.target_os == 'win' && 'windows-2022' || 'ubuntu-22.04' }}
+    steps:
+      - uses: ./.github/actions/build-pdfium.yml
+        with:
+          # branch: ${{ github.event.inputs.branch }}
+          version: ${{ github.event.inputs.version }}
+          target_os: ${{ github.event.inputs.target_os }}
+          target_cpu: ${{ github.event.inputs.target_cpu }}
+          target_environment: ${{ github.event.inputs.target_environment }}
+          enable_v8: ${{ github.event.inputs.enable_v8 == 'true' }}
+          emsdk_version: ${{ github.event.inputs.emsdk_version }}
+          static_lib: ${{ github.event.inputs.static_lib == 'true' }}
+          debug: ${{ github.event.inputs.debug == 'true' }}
