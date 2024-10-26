@@ -36,10 +36,6 @@ inputs:
     description: Emscripten SDK
     required: false
     default: 3.1.69
-outputs:
-  artifact:
-    description: 'The name of the artifact'
-    value: ${{ jobs.build.outputs.artifact }}
 
 runs:
   using: composite
