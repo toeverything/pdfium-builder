@@ -1,16 +1,23 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      versionType:
+        type: choice
+        description: Select version type
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
+          - prepatch
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   id-token: write
   contents: write
-  pull-requests: write
 
 jobs:
   prepare:
@@ -55,6 +62,13 @@ jobs:
         run: |
           yarn run test
           yarn build:packages
+
+      - name: 'Automated Version Bump'
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          version-type: ${{ github.event.inputs.versionType }}
 
       - name: Publish to NPM
         run: |
