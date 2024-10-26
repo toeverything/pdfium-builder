@@ -39,9 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: ./.github/actions/setup-node
-
       - name: Setup PDFium
         uses: ./.github/actions/setup-pdfium
         with:
@@ -50,6 +47,9 @@ jobs:
           static_lib: true
           enable_v8: false
           debug: false
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node
 
       - name: Build packages
         run: |
