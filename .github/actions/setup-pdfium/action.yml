@@ -107,6 +107,17 @@ runs:
     - name: Install Just
       uses: extractions/setup-just@v2
 
+    - name: Install libtinfo
+      shell: bash
+      run: |
+        sudo apt install -y libtinfo5
+
+    - name: Install LLVM and Clang
+      if: ${{ inputs.target_os == 'wasm' }}
+      uses: KyleMayes/install-llvm-action@v2
+      with:
+        version: '18.1'
+
     - name: Install EMSDK
       if: ${{ inputs.target_os == 'wasm' }}
       uses: mymindstorm/setup-emsdk@v14
@@ -132,12 +143,6 @@ runs:
       shell: bash
       run: |
         just -v build pack
-
-    - name: Install LLVM and Clang
-      if: ${{ inputs.target_os == 'wasm' }}
-      uses: KyleMayes/install-llvm-action@v2
-      with:
-        version: '18.1'
 
     - name: Build & Install WASM
       if: ${{ inputs.target_os == 'wasm' }}
