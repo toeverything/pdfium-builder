@@ -18,10 +18,10 @@
   "include": ["./index.ts"],
   "references": [
     {
-      "path": "../pdfium"
+      "path": "../../packages/pdfium"
     },
     {
-      "path": "../types"
+      "path": "../../packages/types"
     }
   ]
 }

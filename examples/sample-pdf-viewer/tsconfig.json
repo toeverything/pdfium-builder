@@ -18,13 +18,13 @@
   "include": ["./index.ts"],
   "references": [
     {
-      "path": "../pdf-viewer"
+      "path": "../../packages/pdf-viewer"
     },
     {
-      "path": "../pdfium"
+      "path": "../../packages/pdfium"
     },
     {
-      "path": "../types"
+      "path": "../../packages/types"
     }
   ]
 }
