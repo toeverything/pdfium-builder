@@ -1,23 +1,16 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      versionType:
-        type: choice
-        description: Select version type
-        default: patch
-        options:
-          - major
-          - minor
-          - patch
-          - prepatch
+  push:
+    branches:
+      - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
   id-token: write
   contents: write
+  pull-requests: write
 
 jobs:
   prepare:
