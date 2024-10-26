@@ -70,7 +70,7 @@ jobs:
       artifact: ${{ steps.init.outputs.artifact }}
     runs-on: ${{ (github.event.inputs.target_os == 'ios' || github.event.inputs.target_os == 'mac') && 'macos-latest' || github.event.inputs.target_os == 'win' && 'windows-2022' || 'ubuntu-22.04' }}
     steps:
-      - uses: ./.github/actions/build-pdfium.yml
+      - uses: ./.github/actions/setup-pdfium
         with:
           # branch: ${{ github.event.inputs.branch }}
           version: ${{ github.event.inputs.version }}
