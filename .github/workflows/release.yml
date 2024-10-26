@@ -43,7 +43,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Setup PDFium
-        uses: ./.github/actions/build-pdfium.yml
+        uses: ./.github/actions/setup-pdfium
         with:
           target_os: wasm
           target_cpu: wasm
