@@ -63,13 +63,6 @@ jobs:
           yarn run test
           yarn build:packages
 
-      - name: 'Automated Version Bump'
-        uses: 'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          version-type: ${{ github.event.inputs.versionType }}
-
       - name: Publish to NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
@@ -77,3 +70,18 @@ jobs:
           yarn ci:publish
           rm ".npmrc"
           yarn config unset npmAuthToken
+
+      - name: Get package version
+        run: |
+          PDF_VIEWER_VERSION=$(jq -r ".version" packages/pdf-viewer/package.json)
+          echo "PDF_VIEWER_RELEASE_TAG=v${PDF_VIEWER_VERSION}" >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        id: release
+        uses: ncipollo/release-action@v1
+        with:
+          commit: master
+          tag: '${{ env.PDF_VIEWER_RELEASE_TAG }}'
+          body: 'Please refer to [CHANGELOG.md](https://github.com/toeverything/pdfium-builder/blob/${{ env.PDF_VIEWER_RELEASE_TAG }}/packages/pdf-viewer/CHANGELOG.md) for details.'
+          token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

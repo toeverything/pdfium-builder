@@ -1,4 +1,4 @@
-name: AFFiNE PDFium build
+name: PDFium build
 
 on:
   workflow_dispatch:
