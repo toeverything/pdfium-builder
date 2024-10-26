@@ -133,6 +133,10 @@ runs:
       run: |
         just -v build pack
 
+    - name: Install LLVM and Clang
+      if: ${{ inputs.target_os == 'wasm' }}
+      uses: KyleMayes/install-llvm-action@v2
+
     - name: Build & Install WASM
       if: ${{ inputs.target_os == 'wasm' }}
       shell: bash
