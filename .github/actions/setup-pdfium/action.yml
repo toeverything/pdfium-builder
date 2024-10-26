@@ -57,6 +57,7 @@ runs:
 
     - name: Install Linux dependencies
       if: ${{ inputs.target_os == 'linux' }}
+      shell: bash
       run: |
         PKGS=""
 
