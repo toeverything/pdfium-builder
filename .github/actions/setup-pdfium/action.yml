@@ -136,6 +136,8 @@ runs:
     - name: Install LLVM and Clang
       if: ${{ inputs.target_os == 'wasm' }}
       uses: KyleMayes/install-llvm-action@v2
+      with:
+        version: '18.1'
 
     - name: Build & Install WASM
       if: ${{ inputs.target_os == 'wasm' }}
