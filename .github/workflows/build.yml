@@ -149,11 +149,13 @@ jobs:
         run: |
           just -v build pack
 
-      - name: Build WASM
+      - name: Build & Install WASM
         if: ${{ inputs.target_os == 'wasm' }}
         shell: bash
         run: |
           just -v build-wasm
+          just -v install-wasm
+
 
       - name: Configure
         run: |
