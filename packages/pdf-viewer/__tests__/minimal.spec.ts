@@ -36,11 +36,17 @@ test('pdf minimal', async () => {
   expect(page.width()).toBeCloseTo(595, 0.1);
   expect(page.height()).toBeCloseTo(842, 0.1);
 
+  expect(page.size()).toStrictEqual({
+    width: page.width(),
+    height: page.height(),
+  });
+
   page.close();
   expect(page.pointer).toBe(0);
 
   expect(page.width()).toBe(0);
   expect(page.height()).toBe(0);
+
   expect(page.rotation()).toBe(-1);
   expect(page.hasTransparency()).toBe(false);
 
@@ -49,6 +55,12 @@ test('pdf minimal', async () => {
 
   expect(page.width()).toBeCloseTo(595, 0.1);
   expect(page.height()).toBeCloseTo(842, 0.1);
+
+  expect(page.size()).toStrictEqual({
+    width: page.width(),
+    height: page.height(),
+  });
+
   expect(page.rotation()).toBe(0);
   expect(page.hasTransparency()).toBe(false);
 

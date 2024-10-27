@@ -2,6 +2,9 @@ import type { Bitmap } from './bitmap.js';
 import type { Document } from './document.js';
 
 export class Page {
+  #width = 0;
+  #height = 0;
+
   constructor(
     public doc: Document,
     public index: number,
@@ -31,6 +34,9 @@ export class Page {
     if (!this.ptr) return;
     this.runtime.closePage(this.ptr);
     this.ptr = 0;
+
+    this.#width = 0;
+    this.#height = 0;
   }
 
   label() {
@@ -57,11 +63,17 @@ export class Page {
   }
 
   width() {
-    return this.runtime.pageWidth(this.ptr);
+    if (!this.#width) {
+      this.#width = this.runtime.pageWidth(this.ptr);
+    }
+    return this.#width;
   }
 
   height() {
-    return this.runtime.pageHeight(this.ptr);
+    if (!this.#height) {
+      this.#height = this.runtime.pageHeight(this.ptr);
+    }
+    return this.#height;
   }
 
   rotation() {
@@ -72,8 +84,24 @@ export class Page {
     return !!this.runtime.pageTransparency(this.ptr);
   }
 
+  size() {
+    if (!this.#width || !this.#height) {
+      const sizePtr = this.runtime.malloc(8);
+
+      this.runtime.pageSize(this.doc.pointer, this.index, sizePtr);
+
+      this.#width = this.runtime.getValue(sizePtr, 'float');
+      this.#height = this.runtime.getValue(sizePtr + 4, 'float');
+
+      this.runtime.free(sizePtr);
+    }
+
+    return { width: this.#width, height: this.#height };
+  }
+
   rect() {
-    return { bottom: 0, left: 0, top: this.height(), right: this.width() };
+    const { width: right, height: top } = this.size();
+    return { bottom: 0, left: 0, top, right };
   }
 
   render(

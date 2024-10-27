@@ -38,7 +38,7 @@ export interface FPDF_Bindings {
     size?: number
   ): number;
   FPDF_GetPageSizeByIndexF(
-    docPtr: numbern,
+    docPtr: number,
     pageIdx: number,
     rectPtr: number
   ): boolean;
