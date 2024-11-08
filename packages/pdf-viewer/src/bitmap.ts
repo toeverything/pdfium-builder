@@ -31,7 +31,7 @@ export class Bitmap {
     return this.runtime.fillBitmap(this.ptr, left, top, width, height, color);
   }
 
-  toBytes() {
+  toUint8Array() {
     const stride = this.runtime.bitmapStride(this.ptr);
     const height = this.runtime.bitmapHeight(this.ptr);
     const bufferPtr = this.runtime.bitmapBuffer(this.ptr);

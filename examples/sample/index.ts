@@ -115,6 +115,8 @@ async function run() {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas!.getContext('2d');
   ctx!.putImageData(imageData, 0, 0);
+
+  wasmExports.FPDF_DestroyLibrary();
 }
 
 run();

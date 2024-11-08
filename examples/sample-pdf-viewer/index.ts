@@ -49,7 +49,7 @@ async function run() {
   bitmap.fill(0, 0, width, height);
   page.render(bitmap, 0, 0, width, height, 0, flags);
 
-  const data = bitmap.toBytes();
+  const data = bitmap.toUint8Array();
 
   bitmap.close();
   page.close();
@@ -59,6 +59,8 @@ async function run() {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas!.getContext('2d');
   ctx!.putImageData(imageData, 0, 0);
+
+  viewer.dispose();
 }
 
 run();
