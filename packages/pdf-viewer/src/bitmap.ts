@@ -42,4 +42,8 @@ export class Bitmap {
     this.runtime.free(bufferPtr);
     return buffer;
   }
+
+  [Symbol.dispose]() {
+    this.close();
+  }
 }

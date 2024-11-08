@@ -186,4 +186,8 @@ export class Page {
 
     return [deviceX, deviceY];
   }
+
+  [Symbol.dispose]() {
+    this.close();
+  }
 }

@@ -14,6 +14,7 @@ export interface FPDF_Config {
  */
 export interface FPDF_Bindings {
   FPDF_InitLibraryWithConfig(config: FPDF_Config): void;
+  FPDF_DestroyLibrary(): void;
 
   FPDF_GetLastError<T extends number>(): T;
 

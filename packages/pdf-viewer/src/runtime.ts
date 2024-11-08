@@ -77,6 +77,7 @@ export class Runtime {
    * Initialize the PDFium library and allocate global resources for it.
    */
   init = this.wasm.FPDF_InitLibraryWithConfig;
+  deinit = this.wasm.FPDF_DestroyLibrary;
 
   /**
    * Gets last error code when a function fails.

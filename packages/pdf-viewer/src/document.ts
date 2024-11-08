@@ -124,4 +124,8 @@ export class Document {
 
     return new Page(this, at, pagePtr);
   }
+
+  [Symbol.dispose]() {
+    this.close();
+  }
 }

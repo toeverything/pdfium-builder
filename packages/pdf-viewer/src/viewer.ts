@@ -72,4 +72,8 @@ export class Viewer {
     );
     return new Bitmap(this.runtime, ptr, format);
   }
+
+  [Symbol.dispose]() {
+    this.runtime.deinit();
+  }
 }
