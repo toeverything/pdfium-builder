@@ -3,7 +3,6 @@
   "private": true,
   "packageManager": "yarn@4.5.0",
   "workspaces": [
-    "crates/pdf-viewer-napi",
     "packages/*",
     "examples/sample",
     "examples/sample-pdf-viewer",

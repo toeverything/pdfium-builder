@@ -26,8 +26,8 @@ export class Document {
    */
   close() {
     if (!this.ptr) return;
-    this.runtime.closeDocument(this.ptr);
     this.runtime.free(this.dataPtr);
+    this.runtime.closeDocument(this.ptr);
     this.runtime.free(this.ptr);
     this.dataPtr = 0;
     this.ptr = 0;

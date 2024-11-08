@@ -70,5 +70,5 @@ test('pdf lorem ipsum', async () => {
   doc.close();
   expect(doc.pointer).toBe(0);
 
-  viewer.dispose();
+  viewer.close();
 });

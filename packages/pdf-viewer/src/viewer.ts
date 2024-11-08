@@ -73,11 +73,11 @@ export class Viewer {
     return new Bitmap(this.runtime, ptr, format);
   }
 
-  dispose() {
+  close() {
     this.runtime.deinit();
   }
 
   [Symbol.dispose]() {
-    this.dispose();
+    this.close();
   }
 }
